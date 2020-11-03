@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h4>{{ ficha.nome }} - {{ ficha.raca.nome }}</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 col-12 text-center">
+                <h5>Força</h5>
+                {{ ficha.str.value }} ({{ ficha.str.mod }})
+            </div>
+            <div class="col-md-2 col-12 text-center">
+                <h5>Destreza</h5>
+                {{ ficha.dex.value }} ({{ ficha.dex.mod }})
+            </div>
+            <div class="col-md-2 col-12 text-center">
+                <h5>Constituição</h5>
+                {{ ficha.con.value }} ({{ ficha.con.mod }})
+            </div>
+            <div class="col-md-2 col-12 text-center">
+                <h5>Inteligência</h5>
+                {{ ficha.int.value }} ({{ ficha.int.mod }})
+            </div>
+            <div class="col-md-2 col-12 text-center">
+                <h5>Sabedoria</h5>
+                {{ ficha.wis.value }} ({{ ficha.wis.mod }})
+            </div>
+            <div class="col-md-2 col-12 text-center">
+                <h5>Carisma</h5>
+                {{ ficha.cha.value }} ({{ ficha.cha.mod }})
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-12">
+                <h2>Testes de resistência</h2>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="str_per"> 
+                    <label class="custom-control-label" for="str_per">Força ({{ ficha.str.mod }})</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="dex_per">
+                    <label class="custom-control-label" for="dex_per">Destreza ({{ ficha.dex.mod }})</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="con_per">
+                    <label class="custom-control-label" for="con_per">Constituição ({{ ficha.con.mod }})</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="int_per">
+                    <label class="custom-control-label" for="int_per">Inteligência ({{ ficha.int.mod }})</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="wis_per">
+                    <label class="custom-control-label" for="wis_per">Sabedoria ({{ ficha.wis.mod }})</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="cha_per">
+                    <label class="custom-control-label" for="cha_per">Carisma ({{ ficha.cha.mod }})</label>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
