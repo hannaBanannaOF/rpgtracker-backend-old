@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '=le0myp1xtmvra$&(x_g9wic2ch2@p+cx&%!xiurh1b^yhn8&!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -130,3 +130,16 @@ AUTH_USER_MODEL = 'core.Usuario'
 # LOGIN_URL = 'core:login'
 # LOGIN_REDIRECT_URL = 'core:home'
 # LOGOUT_URL = 'core:logout'
+
+#DEPLOY TO HEROKU
+if not DEBUG:
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config()
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    ALLOWED_HOSTS = ['*']
+
+    STATIC_ROOT = 'staticfiles'
+    STATIC_URL = '/static/'
+    STATICFILES_DIR = (
+        os.path.join(BASE_DIR, 'static')
+    )
