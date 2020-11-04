@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+    <div class="container">
+        <div class="text-center">
+            <h4 class="display-4">Raças</h4>
+        </div>
+        {% for raca in racas %}
+            {% if forloop.first %}
+                <div class="card-columns">
+            {% endif %}
+            <div class="card">
+                <img class="card-img-top" src="holder.js/100x180/" alt="">
+                <div class="card-body">
+                    <h4 class="card-title">{{ raca }}</h4>
+                    <div class="text-right">
+                        <a href="{% url 'dnd:racas_details' raca.pk %}" class="btn btn-success rounded-pill">Ver</a>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.last %}
+                </div>
+            {% endif %}
+        {% empty %}
+            <div class="text-center">
+                <h4 class="display-4">Nada encontrado!</h4>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock body %}
+    

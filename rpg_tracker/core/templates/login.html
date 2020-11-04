@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block body %}
+    <div class="text-center mx-auto align-items-center">
+        <i class="fa fa-users fa-5x text-white mt-3 bg-primary rounded-circle p-4" aria-hidden="true"></i>
+        {% if form.errors %}
+            <div class="mt-2 mx-2 p-3 rounded-pill alert alert-danger">
+                <h5>Usuário/senha incorretos!</h5>
+            </div>
+        {% endif %}
+        <form method='POST' class="p-4">
+            {% csrf_token %}
+            {% for f in form %}
+                <div class="form-row form-group d-flex align-items-center text-center">
+                    <div class="col-md-6 col-10 mx-auto input-group">
+                        <span class="input-group-prepend">
+                            <div class="input-group-text bg-white pl4 pr-3 pill-left">
+                                {% if f.label == 'Email' %}
+                                    <i class="fa fa-at ml-2" aria-hidden="true"> <span class="sr-only">(Email)</span> </i>
+                                {% else %}
+                                    <i class="fa fa-lock ml-2" aria-hidden="true"> <span class="sr-only">(Senha)</span> </i>
+                                {% endif %}
+                            </div>
+                        </span>
+                        {% render_field f class="form-control form-control-lg pill-right" placeholder=f.label %}
+                    </div>
+                </div>
+                {{ f.errors }}
+            {% endfor %}
+            <div class="col-md-6 col-10 mx-auto text-right">
+                <a href="#" class="text-decoration-none">Não lembro minha senha</a>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill">Continuar</button>
+        </form>
+        <p class="mb-0">Ou</p>
+        <br>
+        <a href="#" class="btn btn-primary btn-lg px-5 rounded-pill">Crie sua conta</a>
+    </div>
+{% endblock body %}
+    

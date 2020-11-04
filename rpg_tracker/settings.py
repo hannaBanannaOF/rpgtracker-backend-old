@@ -27,7 +27,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third-party
     'polymorphic',
+    'widget_tweaks',
     # rpg
     'rpg_tracker.core',
     'rpg_tracker.dnd',
@@ -109,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 
@@ -127,9 +127,9 @@ STATIC_URL = '/static/'
 
 # Auth
 AUTH_USER_MODEL = 'core.Usuario'
-# LOGIN_URL = 'core:login'
-# LOGIN_REDIRECT_URL = 'core:home'
-# LOGOUT_URL = 'core:logout'
+LOGIN_URL = 'core:login'
+LOGIN_REDIRECT_URL = 'core:home'
+LOGOUT_URL = 'core:logout'
 
 #DEPLOY TO HEROKU
 if not DEBUG:

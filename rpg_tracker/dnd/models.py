@@ -4,6 +4,7 @@ from rpg_tracker.core.models import FichaBase
 # Create your models here.
 class RacesDND(models.Model):
     race_name = models.CharField(verbose_name='Nome', blank=False, null=False, max_length=50)
+    race_desc = models.TextField(verbose_name='Descrição', blank=True, null=True)
     str_inc = models.IntegerField(verbose_name='Incremento de força', blank=False, null=False, default=0)
     dex_inc = models.IntegerField(verbose_name='Incremento de destreza', blank=False, null=False, default=0)
     con_inc = models.IntegerField(verbose_name='Incremento de constituição', blank=False, null=False, default=0)
@@ -11,9 +12,13 @@ class RacesDND(models.Model):
     wis_inc = models.IntegerField(verbose_name='Incremento de sabedoria', blank=False, null=False, default=0)
     cha_inc = models.IntegerField(verbose_name='Incremento de carisma', blank=False, null=False, default=0)
     mov_speed = models.FloatField(verbose_name='Deslocamento', blank=False, null=False, default=0)
+    homebrew = models.BooleanField(verbose_name='Homebrew', blank=False, null=False, default=True)
 
     def __str__(self):
-        return '{0}'.format(self.race_name)
+        ret = ''
+        if self.homebrew:
+            ret = ' (Homebrew)'
+        return '{0}{1}'.format(self.race_name, ret)
 
     class Meta:
         verbose_name = 'raça'

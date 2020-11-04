@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+    <div class="container">
+        <div class="jumbotron jumbotron-fluid bg-transparent mb-0">
+            <div class="container">
+                <h1 class="display-3">{{ raca}}</h1>
+                <p class="lead">{{ raca.race_desc }}</p>
+            </div>
+        </div>
+        <div class="text-center">
+            <h2 class="display-4">Incrementos de habilidade</h2>
+            <div class="row">
+                <div class="col-md-2 col-4">
+                    <p class="mb-0 lead">Força</p>
+                    <p>{{ raca.str_inc }}</p>
+                </div>
+                <div class="col-md-2 col-4">
+                    <p class="mb-0 lead">Destreza</p>
+                    <p>{{ raca.dex_inc }}</p>
+                </div>
+                <div class="col-md-2 col-4">
+                    <p class="mb-0 lead">Constituição</p>
+                    <p>{{ raca.con_inc }}</p>
+                </div>
+                <div class="col-md-2 col-4">
+                    <p class="mb-0 lead">Inteligência</p>
+                    <p>{{ raca.int_inc }}</p>
+                </div>
+                <div class="col-md-2 col-4">
+                    <p class="mb-0 lead">Sabedoria</p>
+                    <p>{{ raca.wis_inc }}</p>
+                </div>
+                <div class="col-md-2 col-4">
+                    <p class="mb-0 lead">Carisma</p>
+                    <p>{{ raca.cha_inc }}</p>
+                </div>
+            </div>
+            <!-- <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Força</th>
+                            <th>Destreza</th>
+                            <th>Constituição</th>
+                            <th>Inteligência</th>
+                            <th>Sabedoria</th>
+                            <th>Carisma</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> -->
+        </div>
+    </div>
+{% endblock body %}
+    

@@ -4,8 +4,7 @@ from django.contrib.auth import views as auth_views
 
 app_name = 'dnd'
 urlpatterns = [
-    path('<int:pk>', views.ficha_detalhe, name='ficha_detalhe'),
-    # path('login', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    # path('logout', auth_views.LogoutView.as_view(next_page='core:home'), name='logout'),
-    # path('offline', views.offline, name='offline')
+    path('racas', views.RaceDNDListView.as_view(), name='racas_list'),
+    path('racas/<int:pk>', views.RaceDNDDetailView.as_view(), name='racas_details'),
+    path('ficha/<int:pk>', views.ficha_detalhe, name='ficha_detalhe'),
 ]
