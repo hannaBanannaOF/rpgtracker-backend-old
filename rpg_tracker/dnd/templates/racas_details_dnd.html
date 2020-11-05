@@ -5,7 +5,7 @@
     <div class="container">
         <div class="jumbotron jumbotron-fluid bg-transparent mb-0">
             <div class="container">
-                <h1 class="display-3">{{ raca}}</h1>
+                <h1 class="display-3">{{ raca.race_name }}</h1>
                 <p class="lead">{{ raca.race_desc }}</p>
             </div>
         </div>
@@ -37,27 +37,29 @@
                     <p>{{ raca.cha_inc }}</p>
                 </div>
             </div>
-            <!-- <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Força</th>
-                            <th>Destreza</th>
-                            <th>Constituição</th>
-                            <th>Inteligência</th>
-                            <th>Sabedoria</th>
-                            <th>Carisma</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div> -->
+        </div>
+        <div class="row">
+            <div class="text-center">
+                <h2 class="display-4">Traços</h2>
+                {% for t in raca.traits.all %}
+                    {% if forloop.first %}
+                        <div class="card-columns">
+                    {% endif %}
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ t.name }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ t.description }}</p>
+                        </div>
+                    </div>
+
+                    {% if forloop.last and forloop.count > 0 %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock body %}

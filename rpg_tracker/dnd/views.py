@@ -5,12 +5,12 @@ from django.views.generic import ListView, DetailView
 
 class RaceDNDListView(ListView):
     model = RacesDND
-    template_name = 'racas.html'
+    template_name = 'racas_dnd.html'
     context_object_name = 'racas'
 
 class RaceDNDDetailView(DetailView):
     model = RacesDND
-    template_name = 'racas_details.html'
+    template_name = 'racas_details_dnd.html'
     context_object_name = 'raca'
 
 def ficha_detalhe(request, pk):

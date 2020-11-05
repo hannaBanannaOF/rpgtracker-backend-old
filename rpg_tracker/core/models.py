@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from polymorphic.models import PolymorphicModel
-
 # Create your models here.
 class UsuarioManager(BaseUserManager):
     def create_user(self, email, password=None, **kwargs):

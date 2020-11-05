@@ -12,7 +12,7 @@
 <body class="d-flex flex-column h-100">
     <main role="main" class="flex-shrink-0">
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
-            <a class="navbar-brand" href="#">RPGTracker</a>
+            <a class="navbar-brand" href="{% url 'core:home' %}">RPGTracker</a>
             <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
                 aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -20,9 +20,6 @@
             <div class="collapse navbar-collapse" id="collapsibleNavId">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a href="{% url 'core:logout' %}" class="nav-link">Sair</a>
-                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">D&D 5e</a>
                             <div class="dropdown-menu">
@@ -30,6 +27,12 @@
                                 <a class="dropdown-item" href="#">Classes</a>
                                 <a class="dropdown-item" href="#">Antecedentes</a>
                             </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'accounts:profile' %}" class="nav-link">Painel</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'core:logout' %}" class="nav-link">Sair</a>
                         </li>
                     {% else %}
                         <li class="nav-item">

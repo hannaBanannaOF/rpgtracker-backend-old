@@ -1,8 +1,33 @@
 from django.db import models
-from rpg_tracker.core.models import FichaBase
+from rpg_tracker.core.models import FichaBase, AbstractBaseModel
 
 # Create your models here.
-class RacesDND(models.Model):
+class RaceTraitsDND(AbstractBaseModel):
+    name = models.CharField(verbose_name='Nome', null=False, blank=False, max_length=50)
+    description = models.TextField(verbose_name='Descrição', null=False, blank=False)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def name_trim(self):
+        return self.name.replace(' ', '_').lower()
+
+    class Meta:
+        verbose_name = 'traço racial'
+        verbose_name_plural = 'traços raciais'
+
+class LanguagesDND(AbstractBaseModel):
+    name = models.CharField(verbose_name='Nome', null=False, blank=False, max_length=50)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'idioma'        
+        verbose_name_plural = 'idiomas'
+
+class RacesDND(AbstractBaseModel):
     race_name = models.CharField(verbose_name='Nome', blank=False, null=False, max_length=50)
     race_desc = models.TextField(verbose_name='Descrição', blank=True, null=True)
     str_inc = models.IntegerField(verbose_name='Incremento de força', blank=False, null=False, default=0)
@@ -13,6 +38,9 @@ class RacesDND(models.Model):
     cha_inc = models.IntegerField(verbose_name='Incremento de carisma', blank=False, null=False, default=0)
     mov_speed = models.FloatField(verbose_name='Deslocamento', blank=False, null=False, default=0)
     homebrew = models.BooleanField(verbose_name='Homebrew', blank=False, null=False, default=True)
+    traits = models.ManyToManyField(RaceTraitsDND, 'tracos', verbose_name='Traços')
+    languages = models.ManyToManyField(LanguagesDND, 'idiomas', verbose_name='Idiomas')
+
 
     def __str__(self):
         ret = ''
@@ -64,6 +92,9 @@ class FichaDND(FichaBase):
             'raca' : {
                 'nome' : self.race.race_name
             },
+            'jogador' : self.jogador,
+            'xp' : self.xp,
+            'alinhamento' : self.AlignmentKind.choices[self.alignment][1],
             'str' : {
                 'value' : self.strenght + self.race.str_inc,
                 'mod' : self.calc_mod(self.strenght + self.race.str_inc)
@@ -87,7 +118,8 @@ class FichaDND(FichaBase):
             'cha' : {
                 'value' : self.charisma + self.race.cha_inc,
                 'mod' : self.calc_mod(self.charisma + self.race.cha_inc)
-            }
+            },
+            'tracos' : self.race.traits
         }
 
     class Meta:

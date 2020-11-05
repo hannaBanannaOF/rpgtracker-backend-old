@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        {% for f in request.user.fichas.all %}
+            
+            {% if forloop.first %}
+                <div class="card-columns">
+            {% endif %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        
+                        {% if f.polymorphic_ctype_id == 8 %}
+                            D&D 5e
+                        {% elif f.polymorphic_ctype_id == 9 %}
+                            Call of Cthulhu 7e
+                        {% endif %}
+                            
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        {{ f.nome_personagem }}
+                    </p>
+                </div>
+            </div>
+            {% if forloop.last %}
+                </div>
+            {% endif %}
+                
+        {% empty %}
+            Sem fichas
+        {% endfor %}
+    </div>
+{% endblock body %}
+    
