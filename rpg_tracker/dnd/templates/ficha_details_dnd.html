@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-
 {% block body %}
     <div class="container mt-3">
         <div class="row">
@@ -11,7 +10,17 @@
                 <div class="row">
                     <div class="col-4">
                         <p class="lead mb-0">Classe</p>
-                        <p>N/A</p>
+                        {% for c in ficha.classes.all %}
+                            {% if forloop.first %}
+                                <p>
+                            {% endif %}
+                                {{ c.classe }} {{ c.level }}
+                            {% if forloop.last %}
+                                </p>
+                            {% endif %}
+                        {% empty %}
+                            <p>N/A</p>
+                        {% endfor %}
                     </div>
                     <div class="col-4">
                         <p class="lead mb-0">Antecedentes</p>
@@ -68,145 +77,77 @@
             <div class="col-md-4 text-md-left text-center">
                 <h2>Testes de resistência</h2>
                 <div class="custom-control custom-checkbox pb-2">
-                    <input type="checkbox" class="custom-control-input" name="str_per"> 
-                    <label class="custom-control-label" for="str_per"><ins>{{ ficha.str.mod }}</ins> Força</label>
+                    <input type="checkbox" class="custom-control-input" name="str_per" 
+                    {% if ficha.str.saving %}
+                        checked
+                    {% endif %}
+                    > 
+                    <label class="custom-control-label" for="str_per"><ins>{{ ficha.str.saving_value }}</ins> Força</label>
                 </div>
                 <div class="custom-control custom-checkbox pb-2">
-                    <input type="checkbox" class="custom-control-input" name="dex_per">
-                    <label class="custom-control-label" for="dex_per"><ins>{{ ficha.dex.mod }}</ins> Destreza</label>
+                    <input type="checkbox" class="custom-control-input" name="dex_per"
+                    {% if ficha.dex.saving %}
+                        checked
+                    {% endif %}
+                    >
+                    <label class="custom-control-label" for="dex_per"><ins>{{ ficha.dex.saving_value }}</ins> Destreza</label>
                 </div>
                 <div class="custom-control custom-checkbox pb-2">
-                    <input type="checkbox" class="custom-control-input" name="con_per">
-                    <label class="custom-control-label" for="con_per"><ins>{{ ficha.con.mod }}</ins> Constituição</label>
+                    <input type="checkbox" class="custom-control-input" name="con_per"
+                    {% if ficha.con.saving %}
+                        checked
+                    {% endif %}
+                    >
+                    <label class="custom-control-label" for="con_per"><ins>{{ ficha.con.saving_value }}</ins> Constituição</label>
                 </div>
                 <div class="custom-control custom-checkbox pb-2">
-                    <input type="checkbox" class="custom-control-input" name="int_per">
-                    <label class="custom-control-label" for="int_per"><ins>{{ ficha.int.mod }}</ins> Inteligência</label>
+                    <input type="checkbox" class="custom-control-input" name="int_per"
+                    {% if ficha.int.saving %}
+                        checked
+                    {% endif %}
+                    >
+                    <label class="custom-control-label" for="int_per"><ins>{{ ficha.int.saving_value }}</ins> Inteligência</label>
                 </div>
                 <div class="custom-control custom-checkbox pb-2">
-                    <input type="checkbox" class="custom-control-input" name="wis_per">
-                    <label class="custom-control-label" for="wis_per"><ins>{{ ficha.wis.mod }}</ins> Sabedoria</label>
+                    <input type="checkbox" class="custom-control-input" name="wis_per"
+                    {% if ficha.wis.saving %}
+                        checked
+                    {% endif %}
+                    >
+                    <label class="custom-control-label" for="wis_per"><ins>{{ ficha.wis.saving_value }}</ins> Sabedoria</label>
                 </div>
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" name="cha_per">
-                    <label class="custom-control-label" for="cha_per"><ins>{{ ficha.cha.mod }}</ins> Carisma</label>
+                    <input type="checkbox" class="custom-control-input" name="cha_per"
+                    {% if ficha.cha.saving %}
+                        checked
+                    {% endif %}
+                    >
+                    <label class="custom-control-label" for="cha_per"><ins>{{ ficha.cha.saving_value }}</ins> Carisma</label>
                 </div>
             </div>
             <div class="col-md-8 text-center text-md-left mt-md-0 mt-3">
                 <h2>Perícias</h2>
                 <div class="card-columns">
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_acrobacia">
-                            <label class="custom-control-label" for="per_acrobacia"><ins>{{ ficha.dex.mod }}</ins> Acrobacia <small class="text-muted">(Des)</small></label>
+                    {% for s in ficha.skills %}
+                        <div class="card bg-transparent border-0">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="per_{{ s.ident }}">
+                                <label class="custom-control-label" for="per_acrobacia"><ins>{{ s.value }}</ins> {{ s.text }} <small class="text-muted">({{ s.use }})</small></label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_ades_anim">
-                            <label class="custom-control-label" for="per_ades_anim"><ins>{{ ficha.wis.mod }}</ins> Adestrar animais <small class="text-muted">(Sab)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_arcanism">
-                            <label class="custom-control-label" for="per_arcanism"><ins>{{ ficha.int.mod }}</ins> Arcanismo <small class="text-muted">(Int)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_atletismo">
-                            <label class="custom-control-label" for="per_atletismo"><ins>{{ ficha.str.mod }}</ins> Atletismo <small class="text-muted">(For)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_atuacao">
-                            <label class="custom-control-label" for="per_atuacao"><ins>{{ ficha.cha.mod }}</ins> Atuação <small class="text-muted">(Car)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_enganacao">
-                            <label class="custom-control-label" for="per_enganacao"><ins>{{ ficha.cha.mod }}</ins> Enganação <small class="text-muted">(Car)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_furtividade">
-                            <label class="custom-control-label" for="per_furtividade"><ins>{{ ficha.dex.mod }}</ins> Furtividade <small class="text-muted">(Des)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_hist">
-                            <label class="custom-control-label" for="per_hist"><ins>{{ ficha.int.mod }}</ins> História <small class="text-muted">(Int)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_intimidacao">
-                            <label class="custom-control-label" for="per_intimidacao"><ins>{{ ficha.cha.mod }}</ins> Intimidação <small class="text-muted">(Car)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_intiuicao">
-                            <label class="custom-control-label" for="per_intiuicao"><ins>{{ ficha.wis.mod }}</ins> Intuição <small class="text-muted">(Sab)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_investigacao">
-                            <label class="custom-control-label" for="per_investigacao"><ins>{{ ficha.int.mod }}</ins> Investigação <small class="text-muted">(Int)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_medicina">
-                            <label class="custom-control-label" for="per_medicina"><ins>{{ ficha.wis.mod }}</ins> Medicina <small class="text-muted">(Sab)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_nature">
-                            <label class="custom-control-label" for="per_nature"><ins>{{ ficha.int.mod }}</ins> Natureza <small class="text-muted">(Int)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_percepcao">
-                            <label class="custom-control-label" for="per_percepcao"><ins>{{ ficha.wis.mod }}</ins> Percepção <small class="text-muted">(Sab)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_persuasao">
-                            <label class="custom-control-label" for="per_apersuasao"><ins>{{ ficha.cha.mod }}</ins> Persuasão <small class="text-muted">(Car)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_presti">
-                            <label class="custom-control-label" for="per_presti"><ins>{{ ficha.dex.mod }}</ins> P_restidigitação <small class="text-muted">(Des)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_religiao">
-                            <label class="custom-control-label" for="per_religiao"><ins>{{ ficha.int.mod }}</ins> Religião <small class="text-muted">(Int)</small></label>
-                        </div>
-                    </div>
-                    <div class="card bg-transparent border-0">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="per_survival">
-                            <label class="custom-control-label" for="per_survival"><ins>{{ ficha.wis.mod }}</ins> Sobrevivência <small class="text-muted">(Sab)</small></label>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
         <div class="row">
+            <div class="col-md-4 text-center text-md-left mt-3">
+                <h2>Idiomas e outras proficiências</h2>
+                <p><strong>Idiomas: </strong>
+                {% for i in ficha.raca.idiomas.all %}
+                    {{ i }}{% if not forloop.last %},{% endif %}
+                {% endfor %}</p>
+                <p>+todo</p>
+            </div>
             <div class="col-md-4 text-center text-md-left mt-3">
                 <h2>Traços</h2>
                 <div id="accordion">

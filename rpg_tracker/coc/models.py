@@ -1,5 +1,6 @@
 from django.db import models
 from rpg_tracker.core.models import FichaBase
+from django.urls import reverse
 
 # Create your models here.
 class FichaCOC(FichaBase):
@@ -10,6 +11,9 @@ class FichaCOC(FichaBase):
 
     def __str__(self):
         return '{0} ({1})'.format(self.nome_personagem, self.jogador)
+
+    def get_absolute_url(self):
+        return '#'#reverse('ficha', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name = 'ficha'

@@ -2,8 +2,10 @@
 
 {% block body %}
     <div class="container">
+        <div class="text-center">
+            <h2 class="display-4">Minhas Fichas</h2>
+        </div>
         {% for f in request.user.fichas.all %}
-            
             {% if forloop.first %}
                 <div class="card-columns">
             {% endif %}
@@ -23,12 +25,12 @@
                     <p class="card-text">
                         {{ f.nome_personagem }}
                     </p>
+                    <a href="{{ f.get_absolute_url }}">Ver</a>
                 </div>
             </div>
             {% if forloop.last %}
                 </div>
             {% endif %}
-                
         {% empty %}
             Sem fichas
         {% endfor %}
