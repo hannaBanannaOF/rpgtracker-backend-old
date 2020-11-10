@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+    <div class="container">
+        <div class="text-center">
+            <h4 class="display-4">Classes</h4>
+        </div>
+        {% for classe in classes %}
+            {% if forloop.first %}
+                <div class="card-columns">
+            {% endif %}
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ classe }}</h4>
+                    <div class="text-right">
+                        <a href="#" class="btn btn-success rounded-pill">Ver</a>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.last %}
+                </div>
+            {% endif %}
+        {% empty %}
+            <div class="text-center">
+                <h4 class="display-4">Nada encontrado!</h4>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock body %}
+    

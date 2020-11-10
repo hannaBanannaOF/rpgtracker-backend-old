@@ -1,8 +1,28 @@
 from django.db import models
 from rpg_tracker.core.models import FichaBase, AbstractBaseModel
 from django.urls import reverse
-
+from multiselectfield import MultiSelectField
 # Create your models here.
+SkillChoices = (
+    (0, 'Acrobacia'),
+    (1, 'Adestrar animais'),
+    (2, 'Arcanismo'),
+    (3, 'Atletismo'),
+    (4, 'Atuação'),
+    (5, 'Enganação'),
+    (6, 'Furtividade'),
+    (7, 'História'),
+    (8, 'Intimidação'),
+    (9, 'Intuição'),
+    (10, 'Investigação'),
+    (11, 'Medicina'),
+    (12, 'Natureza'),
+    (13, 'Percepção'),
+    (14, 'Persuasão'),
+    (15, 'Prestidigitação'),
+    (16, 'Religião'),
+    (17, 'Sobrevivência'))
+
 class RaceTraitsDND(AbstractBaseModel):
     name = models.CharField(verbose_name='Nome', null=False, blank=False, max_length=50)
     description = models.TextField(verbose_name='Descrição', null=False, blank=False)
@@ -41,8 +61,9 @@ class RacesDND(AbstractBaseModel):
     homebrew = models.BooleanField(verbose_name='Homebrew', blank=False, null=False, default=True)
     traits = models.ManyToManyField(RaceTraitsDND, 'tracos', verbose_name='Traços')
     languages = models.ManyToManyField(LanguagesDND, 'idiomas', verbose_name='Idiomas')
-
-
+    skills = MultiSelectField(choices=SkillChoices, verbose_name='Proficiência em perícias', null=True, blank=True)
+    skill_choice_limit = models.IntegerField(verbose_name='Limite de escolha de perícias na ficha', blank=True, null=True, help_text='se 0 ou vazio, não existe limite, pega todas as perícias selecionadas')
+    
     def __str__(self):
         ret = ''
         if self.homebrew:
@@ -62,6 +83,7 @@ class ClasseDND(AbstractBaseModel):
     saving_int = models.BooleanField(verbose_name='Proficiência em resistência de inteligência', blank=False, null=False, default=False)
     saving_wis = models.BooleanField(verbose_name='Proficiência em resistência de sabedoria', blank=False, null=False, default=False)
     saving_cha = models.BooleanField(verbose_name='Proficiência em resistência de carisma', blank=False, null=False, default=False)
+    prequesite_races = models.ManyToManyField(RacesDND, 'racas_prereq', verbose_name='Prerequisitos de raça', null=True, blank=True)
 
     def __str__(self):
         return self.nome
@@ -69,6 +91,9 @@ class ClasseDND(AbstractBaseModel):
     class Meta:
         verbose_name = 'classe'
         verbose_name_plural = 'classes'
+
+class AntecedentesDND(AbstractBaseModel):
+    pass
 
 class FichaDND(FichaBase):
     class AlignmentKind(models.IntegerChoices):
@@ -92,7 +117,7 @@ class FichaDND(FichaBase):
     charisma = models.IntegerField(verbose_name='Carisma', blank=False, null=False)
     character_level = models.IntegerField(verbose_name='Nível de personagem', blank=False, null=False, default=1)
     proficiency_bonus = models.IntegerField(verbose_name='Bônus de proficiência', null=False, blank=False, default=2)
-    race = models.ForeignKey(RacesDND, on_delete=models.CASCADE, related_name='raca')
+    race = models.ForeignKey(RacesDND, on_delete=models.CASCADE, related_name='raca', verbose_name='Raça')
 
     def __str__(self):
         return '{0} ({1})'.format(self.nome_personagem, self.jogador)

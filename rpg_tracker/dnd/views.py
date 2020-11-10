@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import FichaDND, RacesDND
+from .models import FichaDND, RacesDND, ClasseDND
 from django.views.generic import ListView, DetailView
 # Create your views here.
 
@@ -7,6 +7,11 @@ class RaceDNDListView(ListView):
     model = RacesDND
     template_name = 'racas_dnd.html'
     context_object_name = 'racas'
+
+class ClasseDNDListView(ListView):
+    model = ClasseDND
+    template_name = 'classes_dnd.html'
+    context_object_name = 'classes'
 
 class RaceDNDDetailView(DetailView):
     model = RacesDND

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # third-party
     'polymorphic',
     'widget_tweaks',
+    'multiselectfield',
     # rpg
     'rpg_tracker.core',
     'rpg_tracker.accounts',
