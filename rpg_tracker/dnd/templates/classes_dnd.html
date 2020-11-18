@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <h4 class="card-title">{{ classe }}</h4>
                     <div class="text-right">
-                        <a href="#" class="btn btn-success rounded-pill">Ver</a>
+                        <a href="{% url 'dnd:classes_details' classe.pk %}" class="btn btn-success rounded-pill">Ver</a>
                     </div>
                 </div>
             </div>

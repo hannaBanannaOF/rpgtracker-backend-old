@@ -18,6 +18,11 @@ class RaceDNDDetailView(DetailView):
     template_name = 'racas_details_dnd.html'
     context_object_name = 'raca'
 
+class ClasseDNDDetailView(DetailView):
+    model = ClasseDND
+    template_name = 'classes_details_dnd.html'
+    context_object_name = 'classe'
+
 def ficha_detalhe(request, pk):
     f = get_object_or_404(FichaDND, pk=pk)
     return render(request, 'ficha_details_dnd.html', {'ficha':f.to_dict()})

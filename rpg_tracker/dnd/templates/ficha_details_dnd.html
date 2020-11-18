@@ -131,8 +131,8 @@
                     {% for s in ficha.skills %}
                         <div class="card bg-transparent border-0">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" name="per_{{ s.ident }}">
-                                <label class="custom-control-label" for="per_acrobacia"><ins>{{ s.value }}</ins> {{ s.text }} <small class="text-muted">({{ s.use }})</small></label>
+                                <input type="checkbox" class="custom-control-input" name="per_{{ s.ident }}" {% if s.has_skill %}checked{% endif %}>
+                                <label class="custom-control-label" for="per_{{ s.ident }}"><ins>{{ s.value }}</ins> {{ s.text }} <small class="text-muted">({{ s.use }})</small></label>
                             </div>
                         </div>
                     {% endfor %}

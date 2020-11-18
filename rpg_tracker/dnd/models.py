@@ -84,6 +84,8 @@ class ClasseDND(AbstractBaseModel):
     saving_wis = models.BooleanField(verbose_name='Proficiência em resistência de sabedoria', blank=False, null=False, default=False)
     saving_cha = models.BooleanField(verbose_name='Proficiência em resistência de carisma', blank=False, null=False, default=False)
     prequesite_races = models.ManyToManyField(RacesDND, 'racas_prereq', verbose_name='Prerequisitos de raça', null=True, blank=True)
+    skills = MultiSelectField(choices=SkillChoices, verbose_name='Proficiência em perícias', null=True, blank=True)
+    skill_choice_limit = models.IntegerField(verbose_name='Limite de escolha de perícias na ficha', blank=True, null=True, help_text='se 0 ou vazio, não existe limite, pega todas as perícias selecionadas')
 
     def __str__(self):
         return self.nome
@@ -118,6 +120,7 @@ class FichaDND(FichaBase):
     character_level = models.IntegerField(verbose_name='Nível de personagem', blank=False, null=False, default=1)
     proficiency_bonus = models.IntegerField(verbose_name='Bônus de proficiência', null=False, blank=False, default=2)
     race = models.ForeignKey(RacesDND, on_delete=models.CASCADE, related_name='raca', verbose_name='Raça')
+    race_skill_selected = MultiSelectField(choices=SkillChoices, verbose_name='Proficiência em perícias da raça', null=True, blank=True)
 
     def __str__(self):
         return '{0} ({1})'.format(self.nome_personagem, self.jogador)
@@ -133,6 +136,22 @@ class FichaDND(FichaBase):
         else:
             ret = ''
         return ret+str(result)
+
+    def check_skill_prof(self, proficiency):
+        new_skillset = []
+        # classes proficiency
+        for c in self.classes.all():
+            if repr(c.selected_skills) != "[]":
+                new_skillset.extend(repr(c.selected_skills).replace("'", "").replace(" ","").strip("[").strip("]").split(','))
+
+        # race proficiency
+        if repr(self.race_skill_selected) != "[]":
+            new_skillset.extend(repr(self.race_skill_selected).replace("'", "").replace(" ","").strip("[").strip("]").split(','))
+        
+        # background proficiency
+        #todo
+        
+        return proficiency in [int(v) for v in new_skillset]
 
     def get_absolute_url(self):
         return reverse('dnd:ficha_detalhe', args=[str(self.pk)])
@@ -186,109 +205,127 @@ class FichaDND(FichaBase):
             'skills' : [
                 {
                     'ident' : 'acrobacia',  
-                    'value' : self.calc_mod(self.dexterity+self.race.dex_inc),
+                    'has_skill' : self.check_skill_prof(0),
+                    'value' : self.calc_mod(self.dexterity+self.race.dex_inc, self.check_skill_prof(0)),
                     'text' : 'Acrobacia',
                     'use' : 'Des'  
                 },
                 {
                     'ident' : 'adestrar',
-                    'value' : self.calc_mod(self.wisdom+self.race.wis_inc),
+                    'has_skill' : self.check_skill_prof(1),
+                    'value' : self.calc_mod(self.wisdom+self.race.wis_inc, self.check_skill_prof(1)),
                     'text' : 'Adestrar animais',
                     'use' : 'Sab'
                 },
                 {
                     'ident' : 'arcanismo',
-                    'value' : self.calc_mod(self.inteligence+self.race.int_inc),
+                    'has_skill' : self.check_skill_prof(2),
+                    'value' : self.calc_mod(self.inteligence+self.race.int_inc, self.check_skill_prof(2)),
                     'text' : 'Arcanismo',
                     'use' : 'Int'
                 },
                 {
                     'ident' : 'atletismo',
-                    'value' : self.calc_mod(self.strenght+self.race.str_inc),
+                    'has_skill' : self.check_skill_prof(3),
+                    'value' : self.calc_mod(self.strenght+self.race.str_inc, self.check_skill_prof(3)),
                     'text' : 'Atletismo',
                     'use' : 'For'
                 },
                 {
                     'ident' : 'atuacao',
-                    'value' : self.calc_mod(self.charisma+self.race.cha_inc),
+                    'has_skill' : self.check_skill_prof(4),
+                    'value' : self.calc_mod(self.charisma+self.race.cha_inc, self.check_skill_prof(4)),
                     'text' : 'Atuação',
                     'use' : 'Car'
                 },
                 {
                     'ident' : 'enganacao',
-                    'value' : self.calc_mod(self.charisma+self.race.cha_inc),
+                    'has_skill' : self.check_skill_prof(5),
+                    'value' : self.calc_mod(self.charisma+self.race.cha_inc, self.check_skill_prof(5)),
                     'text' : 'Enganação',
                     'use' : 'Car'
                 },
                 {
                     'ident' : 'furtividade',
-                    'value' : self.calc_mod(self.dexterity+self.race.dex_inc),
+                    'has_skill' : self.check_skill_prof(6),
+                    'value' : self.calc_mod(self.dexterity+self.race.dex_inc, self.check_skill_prof(6)),
                     'text' : 'Furtividade',
                     'use' : 'Dex'
                 },
                 {
                     'ident' : 'historia',
-                    'value' : self.calc_mod(self.inteligence+self.race.int_inc),
+                    'has_skill' : self.check_skill_prof(7),
+                    'value' : self.calc_mod(self.inteligence+self.race.int_inc, self.check_skill_prof(7)),
                     'text' : 'História',
                     'use' : 'Int'
                 },
                 {
                     'ident' : 'intimnidacao',
-                    'value' : self.calc_mod(self.charisma+self.race.cha_inc),
+                    'has_skill' : self.check_skill_prof(8),
+                    'value' : self.calc_mod(self.charisma+self.race.cha_inc, self.check_skill_prof(8)),
                     'text' : 'Intimidação',
                     'use' : 'Car'
                 },
                 {
                     'ident' : 'intuicao',
-                    'value' : self.calc_mod(self.wisdom+self.race.wis_inc),
+                    'has_skill' : self.check_skill_prof(9),
+                    'value' : self.calc_mod(self.wisdom+self.race.wis_inc, self.check_skill_prof(9)),
                     'text' : 'Intuição',
                     'use' : 'Sab'
                 },
                 {
                     'ident' : 'investigacao',
-                    'value' : self.calc_mod(self.inteligence+self.race.int_inc),
+                    'has_skill' : self.check_skill_prof(10),
+                    'value' : self.calc_mod(self.inteligence+self.race.int_inc, self.check_skill_prof(10)),
                     'text' : 'Investigação',
                     'use' : 'Int'
                 },
                 {
                     'ident' : 'medicina',
-                    'value' : self.calc_mod(self.wisdom+self.race.wis_inc),
+                    'has_skill' : self.check_skill_prof(11),
+                    'value' : self.calc_mod(self.wisdom+self.race.wis_inc, self.check_skill_prof(11)),
                     'text' : 'Medicina',
                     'use' : 'Sab'
                 },
                 {
                     'ident' : 'natureza',
-                    'value' : self.calc_mod(self.inteligence+self.race.int_inc),
+                    'has_skill' : self.check_skill_prof(12),
+                    'value' : self.calc_mod(self.inteligence+self.race.int_inc, self.check_skill_prof(12)),
                     'text' : 'Natureza',
                     'use' : 'Int'
                 },
                 {
                     'ident' : 'percepcao',
-                    'value' : self.calc_mod(self.wisdom+self.race.wis_inc),
+                    'has_skill' : self.check_skill_prof(13),
+                    'value' : self.calc_mod(self.wisdom+self.race.wis_inc, self.check_skill_prof(13)),
                     'text' : 'Percepção',
                     'use' : 'Sab'
                 },
                 {
                     'ident' : 'persuasao',
-                    'value' : self.calc_mod(self.charisma+self.race.cha_inc),
+                    'has_skill' : self.check_skill_prof(14),
+                    'value' : self.calc_mod(self.charisma+self.race.cha_inc, self.check_skill_prof(14)),
                     'text' : 'Persuasão',
                     'use' : 'Car'
                 },
                 {
                     'ident' : 'prestidigitacao',
-                    'value' : self.calc_mod(self.dexterity+self.race.dex_inc),
+                    'has_skill' : self.check_skill_prof(15),
+                    'value' : self.calc_mod(self.dexterity+self.race.dex_inc, self.check_skill_prof(15)),
                     'text' : 'Prestidigitação',
                     'use' : 'Des'
                 },
                 {
                     'ident' : 'religiao',
-                    'value' : self.calc_mod(self.inteligence+self.race.int_inc),
+                    'has_skill' : self.check_skill_prof(16),
+                    'value' : self.calc_mod(self.inteligence+self.race.int_inc, self.check_skill_prof(16)),
                     'text' : 'Religião',
                     'use' : 'Int'
                 },
                 {
                     'ident' : 'sobrevivencia',
-                    'value' : self.calc_mod(self.wisdom+self.race.wis_inc),
+                    'has_skill' : self.check_skill_prof(17),
+                    'value' : self.calc_mod(self.wisdom+self.race.wis_inc , self.check_skill_prof(17)),
                     'text' : 'Sobrevivência',
                     'use' : 'Sab'
                 }
@@ -305,6 +342,7 @@ class ClassesFichaDND(AbstractBaseModel):
     classe = models.ForeignKey(ClasseDND, on_delete=models.CASCADE, related_name='fichas')
     ficha = models.ForeignKey(FichaDND, on_delete=models.CASCADE, related_name='classes')
     level = models.IntegerField(verbose_name='Nível da classe', null=False, blank=False, default=1)
+    selected_skills = MultiSelectField(choices=SkillChoices, verbose_name='Proficiência em perícias selecionadas', null=True, blank=True)
 
     def __str__(self):
         return '{0}(LVL {2}) em {1}'.format(self.classe, self.ficha, self.level)

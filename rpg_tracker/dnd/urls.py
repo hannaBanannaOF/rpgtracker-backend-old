@@ -7,5 +7,7 @@ urlpatterns = [
     path('racas', views.RaceDNDListView.as_view(), name='racas_list'),
     path('racas/<int:pk>', views.RaceDNDDetailView.as_view(), name='racas_details'),
     path('classes', views.ClasseDNDListView.as_view(), name='classes_list'),
+    path('classes/<int:pk>', views.ClasseDNDDetailView.as_view(), name='classes_details'),
     path('fichas/<int:pk>', views.ficha_detalhe, name='ficha_detalhe'),
 ]
+
