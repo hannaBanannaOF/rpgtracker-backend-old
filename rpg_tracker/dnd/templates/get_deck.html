@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            pick_card();
+            $("#new_card").on("click", function(e){
+                $("#img_load").attr('src', $("#img_load").data('img_loader'));
+                pick_card();
+            });
+        });
+        function pick_card(){
+            $.ajax({
+                type : 'GET',
+                url : $("#img_load").data('img_get_url'),
+                dataType : 'json'
+            }).done(function(data, textStatus, jqXHR){
+                $("#img_load").attr('src', data.img)
+            }).fail(function(jqXHR, status, error){
+                console.log(error)
+            });
+        }
+    </script>
+{% endblock js %}
+    
+
+
+{% block body %}
+    <div class="container justify-content-center text-center mt-3">
+        <button id="new_card" class="btn btn-success mb-3">Pegar outra carta</button>
+        <br>
+        <img src="{% static '/img/loader.gif' %}" alt="Deck card" class="img-fluid mt-auto w-50" id="img_load" data-img_get_url="
+        {% if action == 'gm_get_deck' %}
+            {% url 'dnd:gm_crit_deck_get_card' %}
+        {% elif action == 'fail_get_deck' %}
+            {% url 'dnd:fail_deck_get_card' %}
+        {% else %}
+            {% url 'dnd:player_crit_deck_get_card' %}
+        {% endif %}" data-img_loader='{{ loader }}'>
+    </div>    
+{% endblock body %}
+    

@@ -127,6 +127,10 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
+# Media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'rpg_tracker', 'media')
+MEDIA_URL = '/media/'
+
 # Auth
 AUTH_USER_MODEL = 'core.Usuario'
 LOGIN_URL = 'core:login'
