@@ -122,4 +122,4 @@ dmypy.json
 /.vscode
 
 #decks
-/rpg_tracker/core/static
+/rpg_tracker/core/static/img/decks
