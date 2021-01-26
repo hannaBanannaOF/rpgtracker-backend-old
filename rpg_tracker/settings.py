@@ -125,7 +125,7 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/core/static/'
 
 # Media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'rpg_tracker', 'media')
@@ -145,7 +145,7 @@ if not DEBUG:
     ALLOWED_HOSTS = ['*']
 
     STATIC_ROOT = 'staticfiles'
-    STATIC_URL = '/static/'
+    STATIC_URL = '/core/static/'
     STATICFILES_DIR = (
-        os.path.join(BASE_DIR, 'core/static')
+        os.path.join(BASE_DIR, 'core', 'static')
     )
