@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.enums import Choices, IntegerChoices
 from rpg_tracker.core.models import FichaBase, AbstractBaseModel
 from django.urls import reverse
 from multiselectfield import MultiSelectField
@@ -83,7 +84,7 @@ class ClasseDND(AbstractBaseModel):
     saving_int = models.BooleanField(verbose_name='Proficiência em resistência de inteligência', blank=False, null=False, default=False)
     saving_wis = models.BooleanField(verbose_name='Proficiência em resistência de sabedoria', blank=False, null=False, default=False)
     saving_cha = models.BooleanField(verbose_name='Proficiência em resistência de carisma', blank=False, null=False, default=False)
-    prequesite_races = models.ManyToManyField(RacesDND, 'racas_prereq', verbose_name='Prerequisitos de raça', null=True, blank=True)
+    prequesite_races = models.ManyToManyField(RacesDND, 'racas_prereq', verbose_name='Prerequisitos de raça', blank=True)
     skills = MultiSelectField(choices=SkillChoices, verbose_name='Proficiência em perícias', null=True, blank=True)
     skill_choice_limit = models.IntegerField(verbose_name='Limite de escolha de perícias na ficha', blank=True, null=True, help_text='se 0 ou vazio, não existe limite, pega todas as perícias selecionadas')
 
@@ -350,3 +351,55 @@ class ClassesFichaDND(AbstractBaseModel):
     class Meta:
         verbose_name = 'classe em ficha'
         verbose_name_plural = 'classes em fichas'
+
+
+class TrapsDND(AbstractBaseModel):
+    class DangerKind(IntegerChoices):
+        SETBACK = 0, 'Setback'
+        MODERATE = 1, 'Moderado'
+        DANGEROUS = 2, 'Perigoso'
+        PERICULOUS = 3, 'Muito perigoso'
+        DEADLY = 4, 'Mortal'
+    
+    class LevelKind(IntegerChoices):
+        LVL_1_4 = 0, '1-4'
+        LVL_5_8 = 1, '5-8'
+        LVL_9_12 = 2, '9-12'
+        LVL_13_16 = 3, '13-16'
+        LVL_17_20 = 4, '17-20'
+
+    name = models.CharField('Nome', max_length=200, null=False, blank=False)
+    kind = models.CharField('Tipo', max_length=200, null=False, blank=False)
+    level = models.IntegerField('Nível', choices=LevelKind.choices, null=False, blank=False)
+    danger = models.IntegerField('Nível de perigo', choices=DangerKind.choices, null=False, blank=False)
+    description = models.TextField('Descrição', null=False, blank=False)
+    trigger_kind = models.CharField('Tipo de gatilho', max_length=200, null=False, blank=False)
+    trigger_description = models.TextField('Descrição do gatilho', null=False, blank=False)
+    effect_kind = models.CharField('Tipo de efeito', max_length=200, null=False, blank=False)
+    effect_description = models.TextField('Descrição do efeito', null=False, blank=False)
+    countermeasures = models.TextField('Contramedidas', null=False, blank=False)
+
+    def __str__(self):
+        return '{0}(LVL {1}, {2})'.format(self.name, self.LevelKind.choices[self.level][1], self.DangerKind.choices[self.danger][1])
+
+    def to_dict(self):
+        return {
+            'name':self.name,
+            'kind':self.kind,
+            'level':self.LevelKind.choices[self.level][1],
+            'danger': self.DangerKind.choices[self.danger][1],
+            'description': self.description,
+            'trigger': {
+                'kind':self.trigger_kind,
+                'description':self.trigger_description
+            },
+            'effect': {
+                'kind':self.effect_kind,
+                'description':self.effect_description
+            },
+            'countermeasures':self.countermeasures
+        }
+
+    class Meta:
+        verbose_name = 'armadilha'
+        verbose_name_plural = 'armadilhas'

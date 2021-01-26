@@ -5,9 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu a::after {
+            transform: rotate(-90deg);
+            position: absolute;
+            right: 6px;
+            top: .8em;
+        }
+
+        .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-left: .1rem;
+            margin-right: .1rem;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
+            if (!$(this).next().hasClass('show')) {
+                $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
+            }
+            var $subMenu = $(this).next('.dropdown-menu');
+            $subMenu.toggleClass('show');
+
+
+            $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+                $('.dropdown-submenu .show').removeClass('show');
+            });
+
+
+            return false;
+            });
+        });    
+    </script>
     {% block js %}
     {% endblock js %}
     <title>RPGTracker</title>
@@ -25,17 +63,27 @@
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">D&D 5e</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{% url 'dnd:racas_list' %}">Raças</a>
-                                <a class="dropdown-item" href="{% url 'dnd:classes_list' %}">Classes</a>
-                                <a class="dropdown-item" href="#">Antecedentes</a>
-                                <a class="dropdown-item dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Decks</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{% url 'dnd:gm_crit_deck' %}">Crit - GM</a>
-                                    <a class="dropdown-item" href="{% url 'dnd:player_crit_deck' %}">Crit - Players</a>
-                                    <a class="dropdown-item" href="{% url 'dnd:fail_deck' %}">Fail</a>
-                                </div>
-                            </div>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'dnd:racas_list' %}">Raças</a></li>
+                                <li><a class="dropdown-item" href="{% url 'dnd:classes_list' %}">Classes</a></li>
+                                <li><a class="dropdown-item" href="#">Antecedentes</a></li>
+                                <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Decks</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'dnd:gm_crit_deck' %}">Crit - GM</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'dnd:player_crit_deck' %}">Crit - Players</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'dnd:fail_deck' %}">Fail</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu"><a href="#" class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Armadilhas</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'dnd:1_4_traps' %}">Lvl 1-4</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'dnd:5_8_traps' %}">Lvl 5-8</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'dnd:9_12_traps' %}">Lvl 9-12</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'dnd:13_16_traps' %}">Lvl 13-16</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'dnd:17_20_traps' %}">Lvl 17-20</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'accounts:profile' %}" class="nav-link">Painel</a>

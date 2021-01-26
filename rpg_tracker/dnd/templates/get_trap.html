@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            pick_trap();
+            $("#new_trap").on("click", function(e){
+                pick_trap();
+                e.preventDefault();
+            });
+        });
+        function pick_trap(){
+            $("#img_load").show();
+            $.ajax({
+                type : 'GET',
+                url : $("#tbl_trap").data('get_trap_url'),
+                data : {
+                    danger : $("#danger").children("option:selected").val()
+                },
+                dataType : 'json'
+            }).done(function(data, textStatus, jqXHR){
+                var table = $("#tbl_trap");
+                table.empty();
+                if(data.err){
+                    alert('Nada encontrado!');
+                    $("#img_load").hide();
+                    return
+                }
+                table.append("<thead><tr><th colspan=2>"+data.name+" <small>("+data.kind+", "+data.danger+")<p class='mb-0'>"+data.description+"</p></small></th></tr></thead>");
+                table.append("<tbody>"+
+                                "<tr>"+
+                                    "<th scope='row'>Gatilho ("+data.trigger.kind+")</th>"+
+                                    "<td>"+data.trigger.description+"</td>"+
+                                "</tr>"+
+                                "<tr>"+
+                                    "<th scope='row'>Effeito ("+data.effect.kind+")</th>"+
+                                    "<td>"+data.effect.description+"</td>"+
+                                "</tr>"+
+                                "<tr>"+
+                                    "<th scope='row'>Contramedidas</th>"+
+                                    "<td>"+data.countermeasures+"</td>"+
+                                "</tr>"+
+                             "</tbody>");
+                $("#img_load").hide();
+                console.log(data);
+            }).fail(function(jqXHR, status, error){
+                console.log(error)
+            });
+        }
+    </script>
+{% endblock js %}
+
+{% block body %}
+    <div class="container justify-content-center text-center mt-3">
+        <div class="row text-left d-flex justify-content-center">
+            <div class="form-group col-4">
+                <label for="danger" class="mb-0"><small>Tipo de perigo</small></label>
+            {% for v, t in danger_levels.choices %}
+                {% if forloop.first %}
+                    <select class="form-control" name="danger" id="danger">
+                        <option value="" selected>Todos</option>
+                {% endif %}
+                <option value="{{ v }}">{{ t }}</option>
+                {% if forloop.last %}
+                    </select>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+        <button id="new_trap" class="btn btn-success mb-3">Pegar outra armadilha</button>
+        <br>
+        <img src="{% static '/img/loader.gif' %}" alt="Loader" class="img-fluid mt-auto w-50" id="img_load">
+        <table class="table table-bordered" id="tbl_trap" data-get_trap_url="{{ trap_url }}"></table>
+    </div>    
+{% endblock body %}
+    
