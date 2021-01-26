@@ -147,5 +147,5 @@ if not DEBUG:
     STATIC_ROOT = 'staticfiles'
     STATIC_URL = '/static/'
     STATICFILES_DIR = (
-        os.path.join(BASE_DIR, 'static')
+        os.path.join(BASE_DIR, 'core/static')
     )
