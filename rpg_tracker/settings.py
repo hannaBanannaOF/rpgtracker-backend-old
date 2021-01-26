@@ -139,15 +139,15 @@ LOGOUT_URL = 'core:logout'
 
 #DEPLOY TO HEROKU
 if not DEBUG:
-    import dj_database_url
+    # import dj_database_url
     import django_heroku
-    DATABASES['default'] = dj_database_url.config()
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    ALLOWED_HOSTS = ['*']
+    # DATABASES['default'] = dj_database_url.config()
+    # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    # ALLOWED_HOSTS = ['*']
 
-    STATIC_ROOT = 'staticfiles'
-    STATIC_URL = '/core/static/'
-    STATICFILES_DIR = (
-        os.path.join(BASE_DIR, 'core', 'static')
-    )
+    # STATIC_ROOT = 'staticfiles'
+    # STATIC_URL = '/core/static/'
+    # STATICFILES_DIR = (
+    #     os.path.join(BASE_DIR, 'core', 'static')
+    # )
     django_heroku.settings(locals())
