@@ -123,3 +123,5 @@ dmypy.json
 
 #bootstrap
 /rpg_tracker/core/static/scss/bs
+#decks
+/rpg_tracker/core/static/img/decks
