@@ -52,7 +52,7 @@
 </head>
 <body class="d-flex flex-column h-100">
     <main role="main" class="flex-shrink-0">
-        <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <nav class="navbar navbar-dark bg-dark navbar-expand-sm navbar-light bg-light">
             <a class="navbar-brand" href="{% url 'core:home' %}">RPGTracker</a>
             <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -61,30 +61,30 @@
             <div class="collapse navbar-collapse" id="collapsibleNavId">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     {% if user.is_authenticated %}
-                        <li class="nav-item dropdown">
+                        <!--<li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">D&D 5e</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'dnd:racas_list' %}">Raças</a></li>
-                                <li><a class="dropdown-item" href="{% url 'dnd:classes_list' %}">Classes</a></li>
+                                <li><a class="dropdown-item" href="#">Raças</a></li>
+                                <li><a class="dropdown-item" href="#">Classes</a></li>
                                 <li><a class="dropdown-item" href="#">Antecedentes</a></li>
                                 <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Decks</a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{% url 'dnd:gm_crit_deck' %}">Crit - GM</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'dnd:player_crit_deck' %}">Crit - Players</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'dnd:fail_deck' %}">Fail</a></li>
+                                        <li><a class="dropdown-item" href="#">Crit - GM</a></li>
+                                        <li><a class="dropdown-item" href="#">Crit - Players</a></li>
+                                        <li><a class="dropdown-item" href="#">Fail</a></li>
                                     </ul>
                                 </li>
                                 <li class="dropdown-submenu"><a href="#" class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Armadilhas</a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{% url 'dnd:1_4_traps' %}">Lvl 1-4</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'dnd:5_8_traps' %}">Lvl 5-8</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'dnd:9_12_traps' %}">Lvl 9-12</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'dnd:13_16_traps' %}">Lvl 13-16</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'dnd:17_20_traps' %}">Lvl 17-20</a></li>
+                                        <li><a class="dropdown-item" href="#">Lvl 1-4</a></li>
+                                        <li><a class="dropdown-item" href="#">Lvl 5-8</a></li>
+                                        <li><a class="dropdown-item" href="#">Lvl 9-12</a></li>
+                                        <li><a class="dropdown-item" href="#">Lvl 13-16</a></li>
+                                        <li><a class="dropdown-item" href="#">Lvl 17-20</a></li>
                                     </ul>
                                 </li>
                             </ul>
-                        </li>
+                        </li>-->
                         <li class="nav-item">
                             <a href="{% url 'accounts:profile' %}" class="nav-link">Painel</a>
                         </li>
@@ -102,9 +102,9 @@
         {% block body %}  
         {% endblock body %}
     </main>
-    <footer class="footer mt-auto py-3 text-center">
+    <footer class="footer mt-auto py-3 text-center text-white bg-dark">
         Developed by
-        <a href="#">@MischievousG0d</a>
+        <a href="#" class="text-white">@MischievousG0d</a>
     </footer>
 </body>
 </html>
