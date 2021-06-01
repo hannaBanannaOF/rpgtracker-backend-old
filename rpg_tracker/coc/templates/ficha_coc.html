@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% load mathfilters %}
+{% load coc_tags %}
+
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        const allRanges = document.querySelectorAll(".range-wrap");
+        allRanges.forEach(wrap => {
+        
+        const range = wrap.querySelector(".range");
+        const bubble = wrap.querySelector(".bubble");
+        range.addEventListener("input", () => {
+            setBubble(range, bubble);
+        });
+        setBubble(range, bubble);
+        });
+
+        function setBubble(range, bubble) {
+            const val = range.value;
+            const min = range.min ? range.min : 0;
+            const max = range.max ? range.max : 100;
+            const newVal = Number(((val - min) * 100) / (max - min));
+            bubble.innerHTML = val;
+
+            // Sorta magic numbers based on size of the native UI thumb
+            bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
+        }
+    });
+</script>
+{% endblock %}
+
+{% block body %}  
+    <div class="container-fluid mt-3">
+        <!-- base caracteristics, investigator info and photo -->
+        <div class="row mb-2">
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-header bg-dark text-white text-center">
+                        <p class="lead mb-0">Investigador</p>
+                    </div>
+                    <div class="card-body">
+                        <p><b>Nome: </b><u>{{ ficha.nome_personagem }}</u></p>
+                        <p><b>Player: </b><u>{{ ficha.jogador }}</u></p>
+                        <p><b>Ocupação: </b><u>{{ ficha.ocupation }}</u></p>
+                        <p><b>Idade: </b><u>{{ ficha.age }}</u></p>
+                        <p><b>Sexo/Gênero: </b><u>{{ ficha.sex }}</u></p>
+                        <p><b>Residência: </b><u>{{ ficha.residence }}</u></p>
+                        <p><b>Local de Nascimento: </b><u>{{ ficha.birthplace }}</u></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-7">
+                <div class="card">
+                    <div class="card-header bg-secondary text-center">
+                        <h3 class="card-title">Características</h3>
+                    </div>
+                    <div class="card-body d-flex flex-row justify-content-between">
+                        <div class="col-4">
+                            {% load_caracteristics_boxes 'STR' ficha.strength %}
+                            {% load_caracteristics_boxes 'CON' ficha.constitution %}
+                            {% load_caracteristics_boxes 'SIZ' ficha.size %}
+                        </div>
+                        <div class="col-4">
+                            {% load_caracteristics_boxes 'DEX' ficha.dexterity %}
+                            {% load_caracteristics_boxes 'APP' ficha.appearence %}
+                            {% load_caracteristics_boxes 'INT' ficha.inteligence %}
+                        </div>
+                        <div class="col-4">
+                            {% load_caracteristics_boxes 'POW' ficha.power %}
+                            {% load_caracteristics_boxes 'EDU' ficha.education %}
+                            <div class="d-flex flex-row justify-content-between mb-2"> 
+                                <h5>Move Rate</h5>
+                                <div class="border px-4">{{ ficha.move_rate }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="card">
+                    <div class="card-body h-100">
+                        <p class="lead">Sem fotinhas :c</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- hp, mp, sanity and luck -->
+        <div class="row mb-2">
+            <div class="col-12">
+                <div class="card p-2">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        HP
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex flex-row  justify-content-between">
+                                        <h5>MAX HP: {{ ficha.max_hp }}</h5>
+                                        {% if ficha.hp == 0 and ficha.major_wound %}
+                                            <h5 class="text-danger">Morrendo</h5>
+                                        {% elif ficha.hp == 0 %}
+                                            <h5>Inconsciente</h5>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" name="mjr_wnd" id="mjr_wnd" class="custom-control-input" onclick="return false;" {% if ficha.major_wound %}checked{% endif %}>
+                                        <label class="custom-control-label" for="mjr_wnd">Major Wound</label>
+                                    </div>
+                                    <div class="range-wrap">
+                                        <input name="hp_rng" readonly type="range" class="form-control-range range" id="hp_rng" min="0" max="20" value="{{ ficha.hp }}" step="1">
+                                        <output class="bubble" for="hp_rng"></output>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

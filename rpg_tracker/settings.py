@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'polymorphic',
     'widget_tweaks',
     'multiselectfield',
+    'mathfilters',
+    'django_tables2',
     # rpg
     'rpg_tracker.core',
     'rpg_tracker.accounts',

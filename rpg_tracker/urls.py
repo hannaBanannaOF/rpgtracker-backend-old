@@ -22,6 +22,7 @@ from django.conf import settings
 urlpatterns = [
     path('', include('rpg_tracker.core.urls', namespace='core')),
     path('conta/', include('rpg_tracker.accounts.urls', namespace='accounts')),
+    path('coc/', include('rpg_tracker.coc.urls', namespace='coc')),
     #path('dnd/', include('rpg_tracker.dnd.urls', namespace='dnd')),
     path('admin/', admin.site.urls),
 ]
