@@ -1,9 +1,12 @@
-<div class="d-flex flex-row justify-content-between mb-2">
+<div class="{% if not full_cols %}col-6 col-lg-4{% else %}col-12{% endif %} d-flex flex-row justify-content-between mb-2 text-center">
     <h5 class="p-2">{{ symn }}</h5>
     <div class="d-flex flex-row">
         <div class="border">
-            <p class="p-2 mb-0">{{ base_value }}</p>
+            <p class="p-2 mb-0">
+                {{ base_value_pre }}{{ base_value }}{{ base_value_app }}
+            </p>
         </div>
+        {% if show_divs %}
         <div class="d-flex flex-column">
             <div class="border">
                 <small class="px-1">{{ value_div_2 }}</small>
@@ -12,5 +15,6 @@
                 <small class="px-1">{{ value_div_5 }}</small>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>

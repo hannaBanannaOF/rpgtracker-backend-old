@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '=le0myp1xtmvra$&(x_g9wic2ch2@p+cx&%!xiurh1b^yhn8&!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -42,11 +42,15 @@ INSTALLED_APPS = [
     'multiselectfield',
     'mathfilters',
     'django_tables2',
+    'rest_framework',
+    'channels',
     # rpg
     'rpg_tracker.core',
     'rpg_tracker.accounts',
     'rpg_tracker.dnd',
     'rpg_tracker.coc',
+    'rpg_tracker.api',
+    'rpg_tracker.chat',
 ]
 
 MIDDLEWARE = [
@@ -77,7 +81,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'rpg_tracker.wsgi.application'
+ASGI_APPLICATION = 'rpg_tracker.asgi.application'
 
 
 # Database
@@ -139,17 +143,28 @@ LOGIN_URL = 'core:login'
 LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_URL = 'core:logout'
 
+# REST
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
+# Channels
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('localhost', 6379)],
+        },
+    },
+}
+
+# Tables
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
+
 #DEPLOY TO HEROKU
 if not DEBUG:
     # import dj_database_url
     import django_heroku
-    # DATABASES['default'] = dj_database_url.config()
-    # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    # ALLOWED_HOSTS = ['*']
-
-    # STATIC_ROOT = 'staticfiles'
-    # STATIC_URL = '/core/static/'
-    # STATICFILES_DIR = (
-    #     os.path.join(BASE_DIR, 'core', 'static')
-    # )
     django_heroku.settings(locals())

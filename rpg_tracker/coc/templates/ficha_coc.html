@@ -35,8 +35,8 @@
     <div class="container-fluid mt-3">
         <!-- base caracteristics, investigator info and photo -->
         <div class="row mb-2">
-            <div class="col-3">
-                <div class="card">
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="card h-100">
                     <div class="card-header bg-dark text-white text-center">
                         <p class="lead mb-0">Investigador</p>
                     </div>
@@ -51,37 +51,31 @@
                     </div>
                 </div>
             </div>
-            <div class="col-7">
-                <div class="card">
+            <div class="col-12 col-sm-6 col-md-7">
+                <div class="card h-100">
                     <div class="card-header bg-secondary text-center">
-                        <h3 class="card-title">Características</h3>
+                        <h3 class="card-title mb-0">Características</h3>
                     </div>
-                    <div class="card-body d-flex flex-row justify-content-between">
-                        <div class="col-4">
-                            {% load_caracteristics_boxes 'STR' ficha.strength %}
-                            {% load_caracteristics_boxes 'CON' ficha.constitution %}
-                            {% load_caracteristics_boxes 'SIZ' ficha.size %}
-                        </div>
-                        <div class="col-4">
-                            {% load_caracteristics_boxes 'DEX' ficha.dexterity %}
-                            {% load_caracteristics_boxes 'APP' ficha.appearence %}
-                            {% load_caracteristics_boxes 'INT' ficha.inteligence %}
-                        </div>
-                        <div class="col-4">
-                            {% load_caracteristics_boxes 'POW' ficha.power %}
-                            {% load_caracteristics_boxes 'EDU' ficha.education %}
-                            <div class="d-flex flex-row justify-content-between mb-2"> 
-                                <h5>Move Rate</h5>
-                                <div class="border px-4">{{ ficha.move_rate }}</div>
-                            </div>
+                    <div class="card-body d-flex flex-row justify-content-between align-items-center">
+                        <div class="row d-flex flex-row">
+                            {% load_caracteristics_boxes 'STR' ficha.strength True %}
+                            {% load_caracteristics_boxes 'CON' ficha.constitution True %}
+                            {% load_caracteristics_boxes 'SIZ' ficha.size True %}
+                            {% load_caracteristics_boxes 'DEX' ficha.dexterity True %}
+                            {% load_caracteristics_boxes 'APP' ficha.appearence True %}
+                            {% load_caracteristics_boxes 'INT' ficha.inteligence True %}
+                            {% load_caracteristics_boxes 'POW' ficha.power True %}
+                            {% load_caracteristics_boxes 'EDU' ficha.education True %}
+                            {% load_caracteristics_boxes 'Move Rate' ficha.move_rate False %}
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-2">
-                <div class="card">
-                    <div class="card-body h-100">
-                        <p class="lead">Sem fotinhas :c</p>
+            <div class="col-md-2 col-12">
+                <div class="card h-100">
+                    <div class="card-body d-flex align-items-center text-center">
+                        <!--<img class="img-thumbnail" src="https://www.w3schools.com/images/picture.jpg" alt="">-->
+                        <p class="lead">Upload de fotos não suportado no momento!</p>
                     </div>
                 </div>
             </div>
@@ -90,9 +84,9 @@
         <div class="row mb-2">
             <div class="col-12">
                 <div class="card p-2">
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="card">
+                    <div class="row mb-2">
+                        <div class="col-12 col-md-4">
+                            <div class="card h-100">
                                 <div class="card-header">
                                     <h5 class="mb-0">
                                         HP
@@ -108,16 +102,182 @@
                                         {% endif %}
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" name="mjr_wnd" id="mjr_wnd" class="custom-control-input" onclick="return false;" {% if ficha.major_wound %}checked{% endif %}>
-                                        <label class="custom-control-label" for="mjr_wnd">Major Wound</label>
+                                        <input type="checkbox" name="mjr_wnd" id="mjr_wnd" class="custom-control-input" disabled {% if ficha.major_wound %}checked{% endif %}>
+                                        <label class="custom-control-label text-dark" for="mjr_wnd">Major Wound</label>
                                     </div>
                                     <div class="range-wrap">
-                                        <input name="hp_rng" readonly type="range" class="form-control-range range" id="hp_rng" min="0" max="20" value="{{ ficha.hp }}" step="1">
+                                        <input name="hp_rng" type="range" class="form-control-range range" id="hp_rng" min="0" max="20" value="{{ ficha.hp }}" step="1" disabled>
                                         <output class="bubble" for="hp_rng"></output>
                                     </div>  
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-md-8">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        Sanidade
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex flex-row justify-content-between">
+                                        <h5>SAN Inicial: {{ ficha.start_san }}</h5>
+                                        <h5>MAX SAN: {{ ficha.max_san }}</h5>
+                                        {% if ficha.san == 0 %}
+                                            <h5 class="text-danger">Insano</h5>
+                                        {% endif %}
+                                    </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" name="temp_ins" id="temp_ins" class="custom-control-input" disabled {% if ficha.temporary_insanity %}checked{% endif %}>
+                                        <label class="custom-control-label text-dark" for="temp_ins">Insanidade temporária</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" name="indef_ins" id="indef_ins" class="custom-control-input" disabled {% if ficha.indefinity_insanity %}checked{% endif %}>
+                                        <label class="custom-control-label text-dark" for="indef_ins">Insanidade indefinida</label>
+                                    </div>
+                                    <div class="range-wrap">
+                                        <input type="range" name="san_rng" id="san_rng" class="form-control-range range" min="0" max="99" value="{{ ficha.san }}" step="1" disabled>
+                                        <output class="bubble" for="san_rng"></output>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-8">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        Sorte
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    {% if ficha.luck == 0 %}
+                                        <div class="d-flex flex-row justify-content-end">
+                                            <h5 class="text-danger">Sem Sorte</h5>
+                                        </div>
+                                    {% endif %}
+                                    <div class="range-wrap">
+                                        <input type="range" name="luck_rng" id="luck_rng" class="form-control-range range" min="0" max="99" value="{{ ficha.luck }}" step="1" disabled>
+                                        <output class="bubble" for="luck_rng"></output>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        MP
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex flex-row  justify-content-between">
+                                        <h5>MAX HP: {{ ficha.max_mp }}</h5>
+                                    </div>
+                                    <div class="range-wrap">
+                                        <input type="range" name="mp_rng" id="mp_rng" class="form-control-range range" min="0" max="24" value="{{ ficha.mp }}" step="1" disabled>
+                                        <output class="bubble" for="mp_rng"></output>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- skills -->
+        <div class="row mb-2">
+            <div class="col-12">
+                <div class="card h-100">
+                    <div class="card-header bg-secondary text-center">
+                        <h3 class="card-title mb-0">Perícias de Investigador</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row d-flex flex-row">
+                            {% for s in ficha.get_skill_list.values %}
+                                <div class="col-12 col-md-6 col-lg-4 col-xl-3 d-flex justify-content-between align-items-center">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" name="skil_{{ s.name }}" id="skil_{{ s.name }}" class="custom-control-input" disabled  {%if s.improv %}checked{% endif %}>
+                                        <label class="custom-control-label text-dark" for="skil_{{ s.name }}">{{ s.name }}</label>
+                                    </div>
+                                    <div class="d-flex flex-row">
+                                        <div class="border">
+                                            <p class="p-2 mb-0">{{ s.value }}</p>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <div class="border">
+                                                <small class="px-1">{{ s.value|intdiv:2 }}</small>
+                                            </div>
+                                            <div class="border">
+                                                <small class="px-1">{{ s.value|intdiv:5 }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- weapons and combat -->
+        <div class="row mb-2">
+            <div class="col-sm-8 col-12">
+                <div class="card h-100">
+                    <div class="card-header bg-secondary text-center">
+                        <h3 class="card-title mb-0">Armas</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Arma</th>
+                                    <th>Normal</th>
+                                    <th>Bom</th>
+                                    <th>Extremo</th>
+                                    <th>Dano</th>
+                                    <th>Alcance</th>
+                                    <th>Ataques</th>
+                                    <th>Munição</th>
+                                    <th>Defeito</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for weapon in ficha.weapons.all %}
+                                <tr>
+                                    <td>{{ weapon.weapon }}</td>
+                                    <td>{{ weapon.normal_success_value }}</td>
+                                    <td>{{ weapon.normal_success_value|intdiv:2 }}</td>
+                                    <td>{{ weapon.normal_success_value|intdiv:5 }}</td>
+                                    <td>{{ weapon.weapon.damage }}</td>
+                                    <td>{{ weapon.weapon.range|default_if_none:"-" }}</td>
+                                    <td>{{ weapon.weapon.attacks }}</td>
+                                    <td>{% if not weapon.weapon.is_melee %}{{ weapon.rounds_left }} ({{ weapon.total_ammo_left }}){% else %}-{% endif %}</td>
+                                    <td>{{ weapon.weapon.malfunction|default_if_none:"-" }}</td>
+                                </tr>    
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="card h-100">
+                    <div class="card-header bg-secondary text-center">
+                        <h3 class="card-title mb-0">Combate</h3>
+                    </div>
+                    <div class="card-body align-items-center">
+                        <div class="row d-flex flex-col">
+                            {% if ficha.bonus_dmg > 0 %}
+                                {% load_caracteristics_boxes 'Bônus de Dano' ficha.bonus_dmg  False '+' 'D4' True %}
+                            {% else  %}
+                                {% load_caracteristics_boxes 'Bônus de Dano' ficha.bonus_dmg False '' '' True %}
+                            {% endif %}
+                            
+                            {% load_caracteristics_boxes 'Corpo' ficha.build False '' '' True %}
+                            {% load_caracteristics_boxes 'Dodge' ficha.dodge True '' '' True %}
+                        </div>  
                     </div>
                 </div>
             </div>

@@ -25,6 +25,9 @@ urlpatterns = [
     path('coc/', include('rpg_tracker.coc.urls', namespace='coc')),
     #path('dnd/', include('rpg_tracker.dnd.urls', namespace='dnd')),
     path('admin/', admin.site.urls),
+    path('api/', include('rpg_tracker.api.urls', namespace='api')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('chat/', include('rpg_tracker.chat.urls', namespace='chat')),
 ]
 
 if settings.DEBUG:

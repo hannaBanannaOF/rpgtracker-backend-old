@@ -24,10 +24,18 @@ class Skills(AbstractBaseModel):
     parent_skill = models.ForeignKey(to='self', verbose_name='Skill pai', null=True, blank=True, related_name='specializations', on_delete=models.CASCADE)
     skill_kind = models.IntegerField(verbose_name='Tipo de skill', choices=SkillKindChoices.choices, blank=False, null=False)
 
-    def __str__(self):
+    @property
+    def full_name(self):
         if self.parent_skill is not None:
             return '{0} ({1})'.format(self.name, self.parent_skill.name)
         return self.name
+
+    @property
+    def absolute_value(self):
+        return self.parent_skill.base_value if self.parent_skill is not None and (self.base_value is None or self.base_value == 0) else self.base_value
+
+    def __str__(self):
+        return self.full_name
 
     class Meta:
         verbose_name = 'perícia'
@@ -50,7 +58,7 @@ class Ocupation(AbstractBaseModel):
     credit_rating_min = models.IntegerField(verbose_name='Rank de Crédito Mínimo', null=False, blank=False)
     credit_rating_max = models.IntegerField(verbose_name='Rank de Crédito Máximo', null=False, blank=False)
     sugested_contacts = models.TextField(verbose_name='Contatos sugeridos', blank=True, null=True)
-    skills = models.ManyToManyField(to=Skills, related_name='ocupations', verbose_name='Perícias disponiveis', blank=True, null=True)
+    skills = models.ManyToManyField(to=Skills, related_name='ocupations', verbose_name='Perícias disponiveis', blank=True)
     skill_choices = models.IntegerField(verbose_name='Qtde de skills como especialidades pessoais ou de época', blank=True, null=True)
     skill_choices_2 = models.IntegerField(verbose_name='Qtde de skills do tipo', null=True, blank=True)
     skill_choice_2_kind = models.IntegerField(verbose_name='Tipo da skill', choices=Skills.SkillKindChoices.choices, blank=True, null=True)
@@ -91,7 +99,10 @@ class FichaCOC(FichaBase):
     ocupational_skill_points = models.IntegerField(verbose_name='Pontos de perícia ocupacionais', blank=True, null=False)
     personal_interest_skill_points = models.IntegerField(verbose_name='Pontos de perícia de interese pessoais', blank=True, null=False)
     major_wound = models.BooleanField(verbose_name='Major wound', blank=False, null=False, default=False)
-    
+    temporary_insanity = models.BooleanField(verbose_name='Insanidade Temporária', blank=False, null=False, default=False)
+    indefinity_insanity = models.BooleanField(verbose_name='Insanidade Indefinida', blank=False, null=False, default=False)
+    credit_rating = models.IntegerField(verbose_name='Renk de crédito', blank=True, null=True)
+
     def __str__(self):
         return '{0} ({1})'.format(self.nome_personagem, self.jogador)
 
@@ -161,6 +172,19 @@ class FichaCOC(FichaBase):
 
         super().save(*args, **kwargs)
 
+    def get_skill_list(self):
+        skill_list = {}
+        for s in Skills.objects.all():
+            skill_list.update({str(s.pk) : {"name":s.full_name,"value": s.absolute_value,"improv":False}})
+        
+        for s in self.skills.all():
+            if skill_list.get(str(s.skill.pk)) is not None:
+                skill_list.update({str(s.skill.pk) : {"name":s.skill.full_name,"value":s.value,"improv":s.skill_improv}})
+
+        skill_list.update({"-":{"name":"Credit rating", "value":self.credit_rating if self.credit_rating is not None else 0, "improv":False}})
+
+        return dict(sorted(skill_list.items(), key=lambda k_v: k_v[1]["name"]))
+
     class Meta:
         verbose_name = 'ficha'
         verbose_name_plural = 'fichas'
@@ -197,6 +221,8 @@ class Weapons(AbstractBaseModel):
     malfunction = models.IntegerField(verbose_name='Falha', blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
     is_melee = models.BooleanField(verbose_name='Mano a mano', blank=False, null=False, default=True)
     damage = models.CharField(verbose_name='Dano', blank=False, null=False, max_length=20)
+    skill_used = models.ForeignKey(to=Skills, verbose_name='Skill usada', blank=False, null=False, related_name='weapons', on_delete=models.RESTRICT)
+
 
     def __str__(self):
         return self.name
@@ -207,12 +233,25 @@ class Weapons(AbstractBaseModel):
 
 class WeaponsInFicha(AbstractBaseModel):
     weapon = models.ForeignKey(to=Weapons, on_delete=models.RESTRICT, related_name='fichas', blank=False, null=False, verbose_name='Arma')
-    ficha = models.ForeignKey(to=FichaCOC, on_delete=models.CASCADE, null=False, blank=False, verbose_name='Ficha')
+    ficha = models.ForeignKey(to=FichaCOC, on_delete=models.CASCADE, null=False, blank=False, verbose_name='Ficha', related_name='weapons')
     ammo_left = models.IntegerField(verbose_name='Munição disponível', blank=True, null=True)
     rounds_left = models.IntegerField(verbose_name='Tiros restantes', null=True, blank=True)
-    
+
+    @property
+    def total_ammo_left(self):
+        return self.ammo_left * self.weapon.ammo.rounds_shot_with_each if not self.weapon.is_melee else None
+
     def __str__(self):
         return '{0} - {1}'.format(self.weapon, self.ficha)
+
+    @property
+    def normal_success_value(self):
+        has_skill = None
+        for skill in self.ficha.skills.all():
+            if self.weapon.skill_used.pk == skill.skill.pk:
+                has_skill = skill
+                break
+        return has_skill.value if has_skill is not None else self.weapon.skill_used.base_value
 
     class Meta:
         verbose_name = 'arma em ficha'

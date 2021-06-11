@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from polymorphic.models import PolymorphicModel
+from django.contrib.contenttypes.models import ContentType
+
 # Create your models here.
 class UsuarioManager(BaseUserManager):
     def create_user(self, email, password=None, **kwargs):
@@ -23,6 +25,30 @@ class AbstractBaseModel(models.Model):
 
     class Meta:
         abstract = True
+        
+# TODO finalizar permissão de menus
+class MenuItems(AbstractBaseModel):
+    title = models.CharField(verbose_name='Título', null=False, blank=False, max_length=50)
+    path = models.CharField(verbose_name='Caminho do menu', null=True, blank=True, max_length=50, help_text='Python/Django style')
+    parent = models.ForeignKey(to='self', related_name='childs', blank=True, null=True, verbose_name='Item pai', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'item de menu'
+        verbose_name_plural  = 'itens de menu'
+
+class MenuPerms(AbstractBaseModel):
+    name = models.CharField(verbose_name='Nome', max_length=50, null=False, blank=False)
+    items_permited = models.ManyToManyField(to=MenuItems, verbose_name='Itens liberados', blank=True, related_name='menu_perms')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'grupo de permissao de menu'
+        verbose_name_plural  = 'grupos de permissões de menu'
 
 class Usuario(AbstractBaseUser, AbstractBaseModel):
     email = models.EmailField('Email', unique=True, blank=False, null=False)
@@ -31,6 +57,7 @@ class Usuario(AbstractBaseUser, AbstractBaseModel):
     first_name = models.CharField('Nome', max_length=100, blank=False, null=False)
     last_name = models.CharField('Sobrenome', max_length=100, blank=False, null=False)
     is_superuser = models.BooleanField('Superusuário', default=False)
+    permissions = models.ManyToManyField(to=MenuPerms, verbose_name='Permissões', blank=True, related_name='permissions_groups')
 
     objects = UsuarioManager()
 
@@ -50,6 +77,18 @@ class Usuario(AbstractBaseUser, AbstractBaseModel):
     def has_module_perms(self, app_label):
         return True
 
+    def get_menuitens_perm(self):
+        perms = []
+        for p in self.permissions.all():
+            for mi in p.items_permited.all():
+                if mi.parent is None:
+                    perms.append(self.return_menuitens_child_as_dict(mi))
+        return perms
+
+    def return_menuitens_child_as_dict(self, menuitem):
+        childs = [self.return_menuitens_child_as_dict(c) for c in menuitem.childs.all()]
+        return {str(menuitem.pk):{"title":menuitem.title,"path":menuitem.path, "childs" : childs}}
+
     class Meta:
         verbose_name = 'usuário'
         verbose_name_plural = 'usuários'
@@ -57,3 +96,9 @@ class Usuario(AbstractBaseUser, AbstractBaseModel):
 class FichaBase(AbstractBaseModel, PolymorphicModel):
     nome_personagem = models.CharField(verbose_name='Nome do personagem', null=False, blank=False, max_length=50)
     jogador = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='fichas')
+
+    def get_content_type(self):
+        return ContentType.objects.get_for_id(self.polymorphic_ctype_id).app_label
+
+class MesaBase(AbstractBaseModel, PolymorphicModel):
+    fichas = models.ManyToManyField(to=FichaBase, verbose_name='Personagens', related_name='mesa')

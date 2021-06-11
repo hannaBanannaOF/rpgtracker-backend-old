@@ -52,10 +52,18 @@
             top: -1px;
             left: 50%;
         }
+
+        thead.thead-dark a {
+            color: white;
+            text-decoration: none;
+        }
     </style>
+    {% block style %}
+    {% endblock style %}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/146fe99a3a.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
         $(document).ready(function(){
             $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
@@ -81,53 +89,7 @@
 </head>
 <body class="d-flex flex-column h-100">
     <main role="main" class="flex-shrink-0">
-        <nav class="navbar navbar-dark bg-dark navbar-expand-sm navbar-light bg-light">
-            <a class="navbar-brand" href="{% url 'core:home' %}">RPGTracker</a>
-            <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
-                aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavId">
-                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    {% if user.is_authenticated %}
-                        <!--<li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">D&D 5e</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Raças</a></li>
-                                <li><a class="dropdown-item" href="#">Classes</a></li>
-                                <li><a class="dropdown-item" href="#">Antecedentes</a></li>
-                                <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Decks</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Crit - GM</a></li>
-                                        <li><a class="dropdown-item" href="#">Crit - Players</a></li>
-                                        <li><a class="dropdown-item" href="#">Fail</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu"><a href="#" class="dropdown-item dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Armadilhas</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Lvl 1-4</a></li>
-                                        <li><a class="dropdown-item" href="#">Lvl 5-8</a></li>
-                                        <li><a class="dropdown-item" href="#">Lvl 9-12</a></li>
-                                        <li><a class="dropdown-item" href="#">Lvl 13-16</a></li>
-                                        <li><a class="dropdown-item" href="#">Lvl 17-20</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>-->
-                        <li class="nav-item">
-                            <a href="{% url 'accounts:profile' %}" class="nav-link">Painel</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'core:logout' %}" class="nav-link">Sair</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a href="{% url 'core:login' %}" class="nav-link">Acessar</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
+        {% include 'navbar.html' %}
         {% block body %}  
         {% endblock body %}
     </main>
