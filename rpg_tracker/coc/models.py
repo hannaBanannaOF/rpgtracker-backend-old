@@ -256,7 +256,7 @@ class WeaponsInFicha(AbstractBaseModel):
 
     @property
     def get_ficha_description(self):
-        return self.nickname if self.nickname is not None or self.nickname != '' else self.weapon.name
+        return self.nickname if self.nickname is not None and self.nickname != '' else self.weapon.name
 
     class Meta:
         verbose_name = 'arma em ficha'
