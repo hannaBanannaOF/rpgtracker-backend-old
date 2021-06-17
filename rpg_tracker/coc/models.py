@@ -143,7 +143,8 @@ class FichaCOC(FichaBase):
                 self.bonus_dmg = 1
 
             self.dodge = self.dexterity / 2
-
+            self.language_own = self.education
+            
             if self.ocupation.skill_points_calc_rule == Ocupation.SkillPointsCalcRuleChoices.EDU4:
                 self.ocupational_skill_points = self.education * 4
             elif self.ocupation.skill_points_calc_rule == Ocupation.SkillPointsCalcRuleChoices.EDU2APP2:
@@ -187,9 +188,9 @@ class FichaCOC(FichaBase):
 
         skill_list.update({"credit-ratind":{"name":"Credit rating", "value":self.credit_rating if self.credit_rating is not None else 0, "improv":False}})
         skill_list.update({"dodge":{"name":"Dodge", "value":self.dodge, "improv":self.dodge_improv}})
-        skill_list.update({"cthulhu-mythos":{"name":"Cthulhu Mythos", "value":self.cthulhu_mythos, "improv":False}})
+        skill_list.update({"cthulhu-mythos":{"name":"Cthulhu Mythos", "value":self.cthulhu_mythos if self.cthulhu_mythos is not None else 0, "improv":False}})
         skill_list.update({"language-own":{"name":"Own (Language)", "value":self.language_own, "improv":self.language_own_improv}})
-        
+
         return dict(sorted(skill_list.items(), key=lambda k_v: k_v[1]["name"]))
 
     class Meta:
