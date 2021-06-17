@@ -28,6 +28,7 @@ urlpatterns = [
     path('api/', include('rpg_tracker.api.urls', namespace='api')),
     path('api-auth/', include('rest_framework.urls')),
     path('chat/', include('rpg_tracker.chat.urls', namespace='chat')),
+    path('social-auth/', include('social_django.urls', namespace="social")),
 ]
 
 if settings.DEBUG:

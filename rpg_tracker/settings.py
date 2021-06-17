@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'rest_framework',
     'channels',
+    'social_django',
     # rpg
     'rpg_tracker.core',
     'rpg_tracker.accounts',
@@ -142,6 +143,12 @@ AUTH_USER_MODEL = 'core.Usuario'
 LOGIN_URL = 'core:login'
 LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_URL = 'core:logout'
+LOGOUT_REDIRECT_URL = 'core:login'
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.discord.DiscordOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # REST
 REST_FRAMEWORK = {
@@ -163,6 +170,23 @@ CHANNEL_LAYERS = {
 # Tables
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
+# Social Auth
+SOCIAL_AUTH_FACEBOOK_KEY = '162290029212571'       
+SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('FACEBOOK_OAUTH_SECRET', 'FBOauthSecretKey')  
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_link'] 
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {       
+  'fields': 'id, name, email, picture.type(large), link'
+}
+SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [                 
+    ('name', 'name'),
+    ('email', 'email'),
+    ('picture', 'picture'),
+    ('link', 'profile_url'),
+]
+
+SOCIAL_AUTH_DISCORD_KEY = '855087409417814038'
+SOCIAL_AUTH_DISCORD_SECRET = os.getenv('DISCORD_OAUTH_SECRET', 'DiscordOauthSecretKey') 
+SOCIAL_AUTH_DISCORD_SCOPE = ['email']
 #DEPLOY TO HEROKU
 if not DEBUG:
     # import dj_database_url

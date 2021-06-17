@@ -27,15 +27,28 @@
                 </div>
                 {{ f.errors }}
             {% endfor %}
-            <div class="col-md-6 col-10 mx-auto text-right">
+            <div class="col-md-6 col-10 mx-auto text-right mb-3">
                 <a href="#" class="text-decoration-none">Não lembro minha senha</a>
             </div>
-            <br>
-            <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill">Continuar</button>
+            <div class="col-2 mx-auto">
+                <div class="d-flex flex-column justify-content-center">
+                    <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill">Continuar</button>
+                    <a href="#" class="text-decoration-none">Crie sua conta</a>
+                </div>
+            </div>
         </form>
         <p class="mb-0">Ou</p>
         <br>
-        <a href="#" class="btn btn-primary btn-lg px-5 rounded-pill">Crie sua conta</a>
+        <div class="btn-group-vertical">
+            <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-primary btn-lg px-5 rounded-pill">
+                <i class="fab fa-facebook"></i>
+                Login com Facebook
+            </a>
+            <a href="{% url 'social:begin' 'discord' %}" class="btn btn-primary btn-lg px-5 rounded-pill mt-2">
+                <i class="fab fa-discord"></i>
+                Login com Discord
+            </a>
+        </div>
     </div>
 {% endblock body %}
     
