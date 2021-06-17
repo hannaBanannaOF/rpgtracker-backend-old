@@ -77,6 +77,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -183,3 +185,9 @@ if not DEBUG:
     # import dj_database_url
     import django_heroku
     django_heroku.settings(locals())
+    # Force https redirect
+    SECURE_SSL_REDIRECT = True
+    # Honor the 'X-Forwarded-Proto' header for request.is_secure()
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    # Force HTTPS in the final URIs
+    SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
