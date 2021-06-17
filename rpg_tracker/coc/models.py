@@ -95,6 +95,9 @@ class FichaCOC(FichaBase):
     build = models.IntegerField(verbose_name='Corpo', blank=True, null=False)
     bonus_dmg = models.IntegerField(verbose_name='Bonus de dano', blank=True, null=False)
     dodge = models.IntegerField(verbose_name='Esquiva', blank=True, null=False)
+    dodge_improv = models.BooleanField(verbose_name='Improv. Check na esquiva', null=False, default=False, blank=False)
+    language_own = models.IntegerField(verbose_name='Idioma natural', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    language_own_improv = models.BooleanField(verbose_name='Improv. Check no idioma natural', null=False, default=False, blank=False)
     ocupation = models.ForeignKey(to=Ocupation, on_delete=models.RESTRICT, verbose_name='Ocupação', related_name='fichas')
     ocupational_skill_points = models.IntegerField(verbose_name='Pontos de perícia ocupacionais', blank=True, null=False)
     personal_interest_skill_points = models.IntegerField(verbose_name='Pontos de perícia de interese pessoais', blank=True, null=False)
@@ -102,6 +105,7 @@ class FichaCOC(FichaBase):
     temporary_insanity = models.BooleanField(verbose_name='Insanidade Temporária', blank=False, null=False, default=False)
     indefinity_insanity = models.BooleanField(verbose_name='Insanidade Indefinida', blank=False, null=False, default=False)
     credit_rating = models.IntegerField(verbose_name='Renk de crédito', blank=True, null=True)
+    cthulhu_mythos = models.IntegerField(verbose_name='Cthulhu Mythos', blank=True, null=True)
 
     def __str__(self):
         return '{0} ({1})'.format(self.nome_personagem, self.jogador)
@@ -181,8 +185,11 @@ class FichaCOC(FichaBase):
             if skill_list.get(str(s.skill.pk)) is not None:
                 skill_list.update({str(s.skill.pk) : {"name":s.skill.full_name,"value":s.value,"improv":s.skill_improv}})
 
-        skill_list.update({"-":{"name":"Credit rating", "value":self.credit_rating if self.credit_rating is not None else 0, "improv":False}})
-
+        skill_list.update({"credit-ratind":{"name":"Credit rating", "value":self.credit_rating if self.credit_rating is not None else 0, "improv":False}})
+        skill_list.update({"dodge":{"name":"Dodge", "value":self.dodge, "improv":self.dodge_improv}})
+        skill_list.update({"cthulhu-mythos":{"name":"Cthulhu Mythos", "value":self.cthulhu_mythos, "improv":False}})
+        skill_list.update({"language-own":{"name":"Own (Language)", "value":self.language_own, "improv":self.language_own_improv}})
+        
         return dict(sorted(skill_list.items(), key=lambda k_v: k_v[1]["name"]))
 
     class Meta:
