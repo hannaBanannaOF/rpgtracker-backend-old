@@ -246,7 +246,7 @@
                             <tbody>
                             {% for weapon in ficha.weapons.all %}
                                 <tr>
-                                    <td>{{ weapon.weapon }}</td>
+                                    <td>{{ weapon.get_ficha_description }}</td>
                                     <td>{{ weapon.normal_success_value }}</td>
                                     <td>{{ weapon.normal_success_value|intdiv:2 }}</td>
                                     <td>{{ weapon.normal_success_value|intdiv:5 }}</td>

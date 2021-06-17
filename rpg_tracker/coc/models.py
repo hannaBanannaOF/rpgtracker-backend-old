@@ -236,10 +236,11 @@ class WeaponsInFicha(AbstractBaseModel):
     ficha = models.ForeignKey(to=FichaCOC, on_delete=models.CASCADE, null=False, blank=False, verbose_name='Ficha', related_name='weapons')
     ammo_left = models.IntegerField(verbose_name='Munição disponível', blank=True, null=True)
     rounds_left = models.IntegerField(verbose_name='Tiros restantes', null=True, blank=True)
+    nickname = models.CharField(verbose_name='Apelido', max_length=50, null=True, blank=True)
 
     @property
     def total_ammo_left(self):
-        return self.ammo_left * self.weapon.ammo.rounds_shot_with_each if not self.weapon.is_melee else None
+        return (self.ammo_left if self.ammo_left is not None else 0) * self.weapon.ammo.rounds_shot_with_each if not self.weapon.is_melee else None
 
     def __str__(self):
         return '{0} - {1}'.format(self.weapon, self.ficha)
@@ -252,6 +253,10 @@ class WeaponsInFicha(AbstractBaseModel):
                 has_skill = skill
                 break
         return has_skill.value if has_skill is not None else self.weapon.skill_used.base_value
+
+    @property
+    def get_ficha_description(self):
+        return self.nickname if self.nickname is not None or self.nickname != '' else self.weapon.name
 
     class Meta:
         verbose_name = 'arma em ficha'
