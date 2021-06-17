@@ -77,8 +77,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -175,7 +173,16 @@ DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 # Social Auth
 SOCIAL_AUTH_FACEBOOK_KEY = '162290029212571'       
 SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('FACEBOOK_OAUTH_SECRET', 'FBOauthSecretKey')  
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email'] 
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_link'] 
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {       
+  'fields': 'id, name, email, picture.type(large), link'
+}
+SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [                 
+    ('name', 'name'),
+    ('email', 'email'),
+    ('picture', 'picture'),
+    ('link', 'profile_url'),
+]
 
 SOCIAL_AUTH_DISCORD_KEY = '855087409417814038'
 SOCIAL_AUTH_DISCORD_SECRET = os.getenv('DISCORD_OAUTH_SECRET', 'DiscordOauthSecretKey') 
