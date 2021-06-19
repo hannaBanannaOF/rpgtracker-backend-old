@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 
 {% block body %}
+    {% if user.is_authenticated %}
     <div class="jumbotron jumbotron-fluid bg-transparent">
         <div class="container">
-            <h1 class="display-3">Hello world</h1>
-            <p class="lead">Simple hello world</p>
+            <h1 class="display-3">Hello there, {{ user.first_name|default_if_none:"Anon" }}</h1>
+            <p class="lead">Nenhuma mesa iniciada :c</p>
         </div>
     </div>
+    {% else %}
+    <div class="jumbotron jumbotron-fluid bg-transparent">
+        <div class="container">
+            <h1 class="display-3">Change you way of play</h1>
+            <p class="lead">Start using RPGTracker now</p>
+        </div>
+    </div>
+    {% endif %}
         
 {% endblock body %}

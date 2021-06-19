@@ -1,5 +1,4 @@
-from django.contrib.auth import login
-from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import DetailView
 from django_tables2 import SingleTableView, LazyPaginator
 from . import models
@@ -15,8 +14,8 @@ class FichaDetailView(DetailView):
 
 class SkillDetailView(DetailView):
     model = models.Skills
-    template_name = 'skill_detail.html'
-    context_object_name = 'skill'
+    template_name = 'coc_detail.html'
+    context_object_name = 'object'
 
     def get(self, request, *args, **kwargs):
         response = super(SkillDetailView, self).get(request, *args, **kwargs)
@@ -25,6 +24,7 @@ class SkillDetailView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(SkillDetailView, self).get_context_data(**kwargs)
         ctx['form'] = forms.SkillForm(instance=self.object)
+        ctx['post_url'] = reverse("coc:skill_detail", args=[self.get_object().pk])
         return ctx
     
     def post(self, request, *args, **kwargs):
@@ -40,9 +40,28 @@ class SkillDetailView(DetailView):
 class SkillListView(SingleTableView):
     model = models.Skills
     table_class = tables.SkillTable
-    template_name = 'skills_coc.html'
+    template_name = 'listings_coc.html'
     paginator_class = LazyPaginator
+
+    def get_context_data(self, **kwargs):
+        ctx = super(SkillListView, self).get_context_data(**kwargs)
+        ctx['page_title'] = "Inverstigator skills"
+
+        return ctx
+
+class OcupationListView(SingleTableView):
+    model = models.Ocupation
+    table_class = tables.OcupationTable
+    template_name = 'listings_coc.html'
+    paginator_class = LazyPaginator
+
+    def get_context_data(self, **kwargs):
+        ctx = super(OcupationListView, self).get_context_data(**kwargs)
+        ctx['page_title'] = "Ocupations"
+
+        return ctx
 
 ficha = login_required(FichaDetailView.as_view())
 skill_list = login_required(SkillListView.as_view())
 skill_detail = login_required(SkillDetailView.as_view())
+ocupation_list = login_required(OcupationListView.as_view())

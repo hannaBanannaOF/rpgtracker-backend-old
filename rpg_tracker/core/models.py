@@ -71,6 +71,10 @@ class Usuario(AbstractBaseUser, AbstractBaseModel):
     def is_staff(self):
         return self.is_superuser
 
+    @property
+    def fullname(self):
+        return "{0} {1}".format(self.first_name, self.last_name)
+
     def has_perm(self, perm, obj=None):
         return True
 
