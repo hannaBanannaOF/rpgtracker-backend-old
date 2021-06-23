@@ -1,7 +1,7 @@
 from os import name
 from django.db import models
 from django.db.models.enums import IntegerChoices
-from rpg_tracker.core.models import FichaBase, AbstractBaseModel
+from rpg_tracker.core.models import FichaBase, AbstractBaseModel, MesaBase
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -96,7 +96,7 @@ class FichaCOC(FichaBase):
     bonus_dmg = models.IntegerField(verbose_name='Bonus de dano', blank=True, null=False)
     dodge = models.IntegerField(verbose_name='Esquiva', blank=True, null=False)
     dodge_improv = models.BooleanField(verbose_name='Improv. Check na esquiva', null=False, default=False, blank=False)
-    language_own = models.IntegerField(verbose_name='Idioma natural', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    language_own = models.IntegerField(verbose_name='Idioma natural', blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
     language_own_improv = models.BooleanField(verbose_name='Improv. Check no idioma natural', null=False, default=False, blank=False)
     ocupation = models.ForeignKey(to=Ocupation, on_delete=models.RESTRICT, verbose_name='Ocupação', related_name='fichas')
     ocupational_skill_points = models.IntegerField(verbose_name='Pontos de perícia ocupacionais', blank=True, null=False)
@@ -269,3 +269,8 @@ class WeaponsInFicha(AbstractBaseModel):
     class Meta:
         verbose_name = 'arma em ficha'
         verbose_name_plural = 'armas em fichas'
+
+class MesaCOC(MesaBase):
+    class Meta:
+        verbose_name = 'mesa'
+        verbose_name_plural = 'mesas'

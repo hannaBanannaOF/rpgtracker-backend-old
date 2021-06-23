@@ -4,6 +4,7 @@ from django_tables2 import SingleTableView, LazyPaginator
 from . import models
 from . import tables
 from . import forms
+from .decorators import can_see_ficha
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -61,7 +62,7 @@ class OcupationListView(SingleTableView):
 
         return ctx
 
-ficha = login_required(FichaDetailView.as_view())
+ficha = login_required(can_see_ficha(FichaDetailView.as_view()))
 skill_list = login_required(SkillListView.as_view())
 skill_detail = login_required(SkillDetailView.as_view())
 ocupation_list = login_required(OcupationListView.as_view())
