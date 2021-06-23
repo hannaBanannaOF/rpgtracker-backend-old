@@ -111,7 +111,7 @@ class MesaBase(AbstractBaseModel, PolymorphicModel):
 
     def is_mestre(self, user):
         return self.mestre == user
-        
+
     def get_content_type(self):
         return ContentType.objects.get_for_id(self.polymorphic_ctype_id).app_label
 
@@ -124,8 +124,8 @@ class FichaInMesa(AbstractBaseModel):
     in_session = models.BooleanField(verbose_name='Está online', default=False, blank=False, null=False)
 
     def save(self, *args, **kwargs):
-        if self.mesa.get_content_type != self.ficha.get_content_type:
-            raise Exception
+        #if self.mesa.get_content_type != self.ficha.get_content_type:
+            #raise Exception
         super().save(*args, **kwargs)
 
     def is_player_in_mesa(self, player):
