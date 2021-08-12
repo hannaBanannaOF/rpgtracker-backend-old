@@ -14,9 +14,9 @@
                     <div class="card-body">
                         <p><b>Nome: </b><u>{{ ficha.nome_personagem }}</u></p>
                         <p><b>Player: </b><u>{{ ficha.jogador }}</u></p>
-                        <p><b>Escola: </b><u>{{ ficha.escola }}</u></p>
-                        <p><b>Casa: </b><u>{{ ficha.get_casa_hogwarts_display }}</u></p>
-                        <p><b>Familiar (Nome & tipo): </b><u>{{ ficha.familiar }}</u></p>
+                        <p><b>Escola: </b><u>{{ ficha.escola|default_if_none:"" }}</u></p>
+                        <p><b>Casa: </b><u>{{ ficha.get_casa_hogwarts_display|default_if_none:"" }}</u></p>
+                        <p><b>Familiar (Nome & tipo): </b><u>{{ ficha.familiar|default_if_none:"" }}</u></p>
                     </div>
                 </div>
             </div>
