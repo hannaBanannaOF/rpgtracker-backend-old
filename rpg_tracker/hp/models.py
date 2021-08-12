@@ -100,7 +100,7 @@ class FichaHP(FichaBase):
                 'children' : self.get_children(x.pericia),
                 'hint' : ''
             })
-        for x in EspecializacoesCustomizadasPlayer.objects.filter(pericia_pai=skill).filter(ficha=self).all():
+        for x in EspecializacoesCustomizadasPlayer.objects.filter(pericia_pai=skill).filter(ficha__id=self.id).all():
             ret.append({
                 'nome' : x.nome,
                 'valor' : x.valor,
