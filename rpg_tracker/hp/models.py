@@ -93,7 +93,7 @@ class FichaHP(FichaBase):
     def get_children(self, skill):
         ret = []
         for x in skill.especializacoes.all():
-            per = self.pericias.filter(pericia_id=x.id).first()
+            per = self.pericias.filter(pericia_id=x.id).filter(ficha__id=self.id).first()
             ret.append({
                 'nome' : x.nome,
                 'valor' : per.valor if per is not None else 0,
