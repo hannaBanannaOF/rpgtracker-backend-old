@@ -97,7 +97,7 @@ class FichaHP(FichaBase):
             ret.append({
                 'nome' : x.nome,
                 'valor' : per.valor if per is not None else 0,
-                'children' : self.get_children(x),
+                'children' : self.get_children(x.pericia),
                 'hint' : ''
             })
         for x in EspecializacoesCustomizadasPlayer.objects.filter(pericia_pai=skill).all():
