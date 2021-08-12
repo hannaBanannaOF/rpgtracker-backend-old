@@ -1,13 +1,19 @@
 from functools import wraps
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
-from .models import FichaCOC, MesaCOC
+from rpg_tracker.coc.models import FichaCOC
+from rpg_tracker.hp.models import FichaHP
 
-def can_see_ficha(function):
+def can_see_ficha(function, type):
     @wraps(function)
     def wrapper(request, *args, **kwargs):
         can_see = False
-        ficha = get_object_or_404(FichaCOC, pk=kwargs['pk'])
+        if(type == 'coc'):
+            ficha = get_object_or_404(FichaCOC, pk=kwargs['pk'])
+        elif(type == 'hp'):
+            ficha = get_object_or_404(FichaHP, pk=kwargs['pk'])
+        else:
+            raise PermissionDenied
         for x in ficha.mesas_jogadas.all():
             if x.is_player_in_mesa(request.user):
                 can_see = True

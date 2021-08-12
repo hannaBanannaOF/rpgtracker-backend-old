@@ -1,0 +1,19 @@
+{% if skills|length %}
+    {% if first %}<div class="col-12">{% endif %}
+        <ul {% if first %}class="list-unstyled"{% endif %}>
+            {% for skill in skills %}
+                <li>
+                    <p class="mb-0">
+                        {% if skill.valor > 0 %}
+                            {{ skill.valor }}
+                        {% else %}
+                            _
+                        {% endif %} - {{ skill.nome }}
+                        {% if skill.hint != '' %}
+                            <small class="text-muted">({{ skill.hint }})</small>{% endif %}</p>
+                    {% include "load_skill_lists.html" with skills=skill.children first=False %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% if first %}</div>{% endif %}
+{% endif %}

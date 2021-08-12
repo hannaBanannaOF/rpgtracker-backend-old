@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rpg_tracker.accounts',
     'rpg_tracker.dnd',
     'rpg_tracker.coc',
+    'rpg_tracker.hp',
     'rpg_tracker.api',
     'rpg_tracker.chat',
 ]
@@ -145,7 +146,6 @@ LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_URL = 'core:logout'
 LOGOUT_REDIRECT_URL = 'core:login'
 AUTHENTICATION_BACKENDS = [
-    'social_core.backends.facebook.FacebookOAuth2',
     'social_core.backends.discord.DiscordOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
@@ -171,19 +171,6 @@ CHANNEL_LAYERS = {
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
 # Social Auth
-SOCIAL_AUTH_FACEBOOK_KEY = '162290029212571'       
-SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('FACEBOOK_OAUTH_SECRET', 'FBOauthSecretKey')  
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_link'] 
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {       
-  'fields': 'id, name, email, picture.type(large), link'
-}
-SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [                 
-    ('name', 'name'),
-    ('email', 'email'),
-    ('picture', 'picture'),
-    ('link', 'profile_url'),
-]
-
 SOCIAL_AUTH_DISCORD_KEY = '855087409417814038'
 SOCIAL_AUTH_DISCORD_SECRET = os.getenv('DISCORD_OAUTH_SECRET', 'DiscordOauthSecretKey') 
 SOCIAL_AUTH_DISCORD_SCOPE = ['email']

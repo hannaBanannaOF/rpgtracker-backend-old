@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load hp_tags %}
+{% block body %}
+    <div class="container-fluid mt-3">
+        <div class="row mb-2">
+            <div class="col-12 col-sm-10">
+                <div class="card h-100">
+                    <div class="card-header bg-secondary text-center">
+                        <h3 class="card-title mb-0">
+                            Características
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <p><b>Nome: </b><u>{{ ficha.nome_personagem }}</u></p>
+                        <p><b>Player: </b><u>{{ ficha.jogador }}</u></p>
+                        <p><b>Escola: </b><u>{{ ficha.escola }}</u></p>
+                        <p><b>Casa: </b><u>{{ ficha.get_casa_hogwarts_display }}</u></p>
+                        <p><b>Familiar (Nome & tipo): </b><u>{{ ficha.familiar }}</u></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-2">
+                <div class="card h-100">
+                    <div class="card-body d-flex align-items-center text-center">
+                        <p class="lead mx-auto">Upload de fotos não suportado no momento!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-12">
+                <div class="card h-100">
+                    <div class="card-header bg-secondary text-center">
+                        <h3 class="card-title mb-0">
+                            Aptidões, Perícias e Especializações
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-sm-3">
+                                <div class="col-12 d-flex flex-row">
+                                    <h5 class="bg-secondary text-white px-3 mr-1">{{ ficha.atletismo }}</h5>
+                                    <h5>Atletismo</h5>
+                                </div>
+                                {% load_skill_list ficha.get_pericias_atletismo True %}
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <div class="col-12 d-flex flex-row">
+                                    <h5 class="bg-secondary text-white px-3 mr-1">{{ ficha.conhecimento }}</h5>
+                                    <h5>Conhecimento</h5>
+                                </div>
+                                {% load_skill_list ficha.get_pericias_conhecimento True %}
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <div class="col-12 d-flex flex-row">
+                                    <h5 class="bg-secondary text-white px-3 mr-1">{{ ficha.intriga }}</h5>
+                                    <h5>Intriga</h5>
+                                </div>
+                                {% load_skill_list ficha.get_pericias_intriga True %}
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <div class="col-12 d-flex flex-row">
+                                    <h5 class="bg-secondary text-white px-3 mr-1">{{ ficha.magia }}</h5>
+                                    <h5>Magia</h5>
+                                </div>  
+                                {% load_skill_list ficha.get_pericias_magia True %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-12">
+                <div class="card h-100">
+                    <div class="card-header bg-secondary text-center">
+                        <h3 class="card-title mb-0">
+                            Equipamentos e materiais escolares
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        {% for item in ficha.equipamentos.all %}
+                            {{ item }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

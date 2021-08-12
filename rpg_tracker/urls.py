@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('rpg_tracker.core.urls', namespace='core')),
     path('conta/', include('rpg_tracker.accounts.urls', namespace='accounts')),
     path('coc/', include('rpg_tracker.coc.urls', namespace='coc')),
+    path('hp/', include('rpg_tracker.hp.urls', namespace='hp')),
     #path('dnd/', include('rpg_tracker.dnd.urls', namespace='dnd')),
     path('admin/', admin.site.urls),
     path('api/', include('rpg_tracker.api.urls', namespace='api')),
