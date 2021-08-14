@@ -2,16 +2,16 @@
 {% load static %}
 {% block body %}
     <div class="container">
-        <div class="text-center">
+        <div class="jumbotron jumbotron-fluid bg-transparent text-center">
             <h2 class="display-4">
-                {% if request.user.is_staff %}
+                {% if request.user.is_superuser %}
                     Todas as fichas
                 {% else %}
                     Minhas Fichas
                 {% endif %}
             </h2>
         </div>
-        {% if request.user.is_staff %}
+        {% if request.user.is_superuser %}
             {% for f in fichas %}
                 {% if forloop.first %}
                     <div class="card-columns">
