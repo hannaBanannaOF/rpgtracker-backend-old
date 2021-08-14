@@ -7,7 +7,46 @@ from django.db import models
 from django.urls import reverse
 
 # Create your models here.
+class CategoriaFolioUniversitas(AbstractBaseModel):
+    nome = models.CharField(verbose_name="Nome", null=False, blank=False, max_length=255)
+    imgBase64 = models.TextField(verbose_name="Imagem (Base64)", blank=False, null=False)
+
+    def __str__(self):
+        return self.nome
+
+    @property
+    def quantidade_cartas(self):
+        return self.cartas.count()
+
+    class Meta:
+        verbose_name = "categoria Folio Universitas"
+        verbose_name_plural = "categorias Folio Universitas"
+
+
+class CartaFolioUniversitas(AbstractBaseModel):
+    nome = models.CharField(verbose_name="Nome", null=False, blank=False, max_length=255)
+    categoria = models.ForeignKey(to=CategoriaFolioUniversitas, related_name="cartas", verbose_name="categoria", blank=False, null=False, on_delete=models.CASCADE)
+    imgBase64 = models.TextField(verbose_name="Imagem (Base64)", blank=False, null=False)
+    descricao = models.TextField(verbose_name="Descrição", blank=False, null=False)
+    anoNasc = models.IntegerField(verbose_name="Nascimento", null=True, blank=True)
+    anoMort = models.IntegerField(verbose_name="Nascimento", null=True, blank=True)
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        verbose_name = "carta Folio Universitas"
+        verbose_name_plural = "cartas Folio Universitas"
+
+
 class Equipamentos(AbstractBaseModel):
+    class TipoMaterial(IntegerChoices):
+        LIVRO = 0, "Livro"
+        CALDEIRAO = 1, "Caldeirão"
+        VASSOURA = 2, "Vassoura"
+        VESTES = 3, "Vestes"
+        PESSOAIS = 4, "Pessoais"
+
     nome = models.CharField(verbose_name="Nome", null=False, blank=False, max_length=255)
     material_escolar = models.BooleanField(verbose_name="É material escolar", null=False, blank=False, default=False)
 

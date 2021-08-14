@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container-fluid mt-3">
+        <div class="jumbotron jumbotron-fluid bg-transparent">
+            <div class="container text-center">
+                <h1 class="display-4">Folio Universitas</h1>
+            </div>
+        </div>
+        {% for cat in categorias %}
+            {% if forloop.first %}
+                <div class="d-flex flex-row">    
+            {% endif %}
+                <div class="card">
+                    <img class="card-img" src="data:image/png;base64, {{ cat.imgBase64 }}" alt="{{ cat.nome }}">
+                    <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(to bottom, transparent 0%, black 100%);">
+                        <h5 class="text-white">{{ cat.nome }}</h5>
+                        {% if user.is_superuser %}
+                            <small class="text-white">{{ cat.quantidade_cartas }} cartas</small>
+                        {% else %}
+                            <small class="text-white">{{ cat.quantidade_cartas }} cartas adquiridas</small>
+                        {% endif %}
+                        <a href="#" class="stretched-link"></a>
+                    </div>
+                </div>
+            {% if forloop.last %}
+                </div>
+            {% endif %}
+        {% empty %}
+            <div class="text-center">
+                <p class="lead">Nada encontrado!</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock body %}
