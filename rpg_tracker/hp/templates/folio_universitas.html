@@ -9,10 +9,10 @@
         </div>
         {% for cat in categorias %}
             {% if forloop.first %}
-                <div class="card-deck">    
+                <div class="card-columns">    
             {% endif %}
                 <div class="card">
-                    <img class="card-img img-fluid" src="data:image/png;base64, {{ cat.imgBase64 }}" alt="{{ cat.nome }}">
+                    <img class="card-img" src="data:image/png;base64, {{ cat.imgBase64 }}" alt="{{ cat.nome }}">
                     <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(to bottom, transparent 0%, black 100%);">
                         <h5 class="text-white">{{ cat.nome }}</h5>
                         {% if user.is_superuser %}
