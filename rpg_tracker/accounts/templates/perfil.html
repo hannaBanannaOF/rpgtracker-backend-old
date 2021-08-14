@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block body %}
     <div class="container">
         <div class="text-center">
@@ -16,17 +17,13 @@
                     <div class="card-columns">
                 {% endif %}
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">
                         {% if f.get_content_type == "dnd" %}
-                            D&D 5e
+                            <div class="card-header"><h5 class="card-title">D&D 5e</h5></div>
                         {% elif f.get_content_type == "coc" %}
-                                Call of Cthulhu 7e
+                            <img class="card-img-top" src="{% static 'img/banners/cthulhu.jpg' %}" alt="Call of Cthulhu (7e)">
                         {% elif f.get_content_type == "hp" %}
-                            Harry Potter (Broomstix)
+                            <img class="card-img-top" src="{% static 'img/banners/hp.png' %}" alt="Harry Potter (Broomstix)">
                         {% endif %}
-                        </h5>
-                    </div>
                     <div class="card-body">
                         <p class="card-text">
                             {{ f }}
