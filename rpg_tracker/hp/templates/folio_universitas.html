@@ -8,6 +8,11 @@
                 <h1 class="display-4">{% if ficha %}Meu Folio Universitas{% else %}Folio Universitas{% endif %}</h1>
                 {% if ficha %}
                     <p class="lead">{{ ficha.nome_personagem }}</p>
+                    {% if not ficha.mesa or not ficha.mesa.open_session or not ficha.in_session %}
+                        <a href="#" class="ml-auto btn btn-primary disabled" role="button" aria-disabled="true">
+                    {% else %}
+                        <a href="#" class="ml-auto btn btn-primary" role="button" aria-disabled="false">
+                    {% endif %}Abrir sapo de chocolate</a>
                 {% endif %}
             </div>
         </div>

@@ -97,20 +97,23 @@ class Usuario(AbstractBaseUser, AbstractBaseModel):
         verbose_name = 'usuário'
         verbose_name_plural = 'usuários'
 
-class FichaBase(AbstractBaseModel, PolymorphicModel):
-    nome_personagem = models.CharField(verbose_name='Nome do personagem', null=False, blank=False, max_length=50)
-    jogador = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='fichas')
-
-    def get_content_type(self):
-        return ContentType.objects.get_for_id(self.polymorphic_ctype_id).app_label
-
 class MesaBase(AbstractBaseModel, PolymorphicModel):
     name = models.CharField(verbose_name='Nome da mesa', null=False, blank=False, max_length=50)
     open_session = models.BooleanField(verbose_name='Sessão aberta', default=False, null=False, blank=False)
     mestre = models.ForeignKey(to=Usuario, on_delete=models.RESTRICT, verbose_name='Mestre', related_name='mesas_mestradas', blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if not self.open_session:
+            for x in self.fichas_mesa.all():
+                x.in_session = False
+                x.save()
+        super().save(*args, **kwargs)
+
     def is_mestre(self, user):
         return self.mestre == user
+
+    def is_player(self, user):
+        return self.fichas_mesa.filter(jogador=user).count() > 0
 
     def get_content_type(self):
         return ContentType.objects.get_for_id(self.polymorphic_ctype_id).app_label
@@ -118,22 +121,11 @@ class MesaBase(AbstractBaseModel, PolymorphicModel):
     def __str__(self):
         return '{0} ({1}){2}'.format(self.name, self.get_content_type().upper(), ' - Aberta' if self.open_session else '')
 
-class FichaInMesa(AbstractBaseModel):
-    ficha = models.ForeignKey(to=FichaBase, verbose_name='Ficha', related_name='mesas_jogadas', on_delete=models.CASCADE, blank=False, null=False)
-    mesa = models.ForeignKey(to=MesaBase, verbose_name='Mesa', related_name='fichas', null=False, blank=False, on_delete=models.CASCADE)
-    in_session = models.BooleanField(verbose_name='Está online', default=False, blank=False, null=False)
+class FichaBase(AbstractBaseModel, PolymorphicModel):
+    nome_personagem = models.CharField(verbose_name='Nome do personagem', null=False, blank=False, max_length=50)
+    jogador = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='fichas')
+    mesa = models.ForeignKey(to=MesaBase, on_delete=models.RESTRICT, related_name='fichas_mesa', verbose_name='Mesa', null=True, blank=True)
+    in_session = models.BooleanField("Está online na sessão", default=False, null=False, blank=False)
 
-    def save(self, *args, **kwargs):
-        #if self.mesa.get_content_type != self.ficha.get_content_type:
-            #raise Exception
-        super().save(*args, **kwargs)
-
-    def is_player_in_mesa(self, player):
-        for x in self.mesa.fichas.all():
-            if x.ficha.jogador == player:
-                return True
-            
-        return False
-
-    def __str__(self):
-        return '{0} em {1}'.format(self.ficha.nome_personagem, self.mesa.name)
+    def get_content_type(self):
+        return ContentType.objects.get_for_id(self.polymorphic_ctype_id).app_label
