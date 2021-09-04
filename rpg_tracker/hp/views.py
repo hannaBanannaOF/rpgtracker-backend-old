@@ -23,7 +23,6 @@ class FolioUniversitasListView(ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super(FolioUniversitasListView, self).get_context_data(**kwargs)
-        print(self.ficha)
         ctx['ficha'] = self.ficha
         return ctx
 
