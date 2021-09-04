@@ -24,8 +24,16 @@ def can_see_ficha(function, type):
         if not can_see:
             can_see = ficha.jogador == request.user
         #if request.user.is_staff:
-        if can_see or request.user.is_staff:
+        if can_see or request.user.is_superuser:
             return function(request, *args, **kwargs)
         else:
             raise PermissionDenied
+    return wrapper
+
+def only_superuser(function):
+    @wraps(function)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_superuser:
+            raise PermissionDenied
+        return function(request, *args, **kwargs)
     return wrapper

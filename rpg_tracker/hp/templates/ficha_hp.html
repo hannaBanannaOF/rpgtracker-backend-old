@@ -12,11 +12,15 @@
                         </h3>
                     </div>
                     <div class="card-body">
-                        <p><b>Nome: </b><u>{{ ficha.nome_personagem }}</u></p>
+                        <div class="d-flex justify-content-between">
+                            <p><b>Nome: </b><u>{{ ficha.nome_personagem }}</u></p>
+                            <a class="btn btn-primary" href="{% url 'hp:folio_universitas_ficha' ficha.pk %}">Meu Folio Universitas</a>
+                        </div>
                         <p><b>Player: </b><u>{{ ficha.jogador }}</u></p>
                         <p><b>Escola: </b><u>{{ ficha.escola|default_if_none:"" }}</u></p>
                         <p><b>Casa: </b><u>{{ ficha.get_casa_hogwarts_display|default_if_none:"" }}</u></p>
                         <p><b>Familiar (Nome & tipo): </b><u>{{ ficha.familiar|default_if_none:"" }}</u></p>
+                        
                     </div>
                 </div>
             </div>

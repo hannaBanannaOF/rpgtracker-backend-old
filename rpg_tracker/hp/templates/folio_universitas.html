@@ -1,25 +1,30 @@
 {% extends 'base.html' %}
-
+{% load hp_tags %}
 {% block body %}
     <div class="container-fluid mt-3">
         <div class="jumbotron jumbotron-fluid bg-transparent">
             <div class="container text-center">
-                <h1 class="display-4">Folio Universitas</h1>
+                <h1 class="display-4">{% if ficha %}Meu Folio Universitas{% else %}Folio Universitas{% endif %}</h1>
+                {% if ficha %}
+                    <p class="lead">{{ ficha.nome_personagem }}</p>
+                {% endif %}
             </div>
         </div>
         {% for cat in categorias %}
             {% if forloop.first %}
-                <div class="card-columns">    
+                <div class="d-flex flex-sm-row flex-column justify-content-around flex-wrap">    
             {% endif %}
                 <div class="card">
                     <img class="card-img" src="data:image/png;base64, {{ cat.imgBase64 }}" alt="{{ cat.nome }}">
                     <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(to bottom, transparent 0%, black 100%);">
                         <h5 class="text-white">{{ cat.nome }}</h5>
-                        {% if user.is_superuser %}
-                            <small class="text-white">{{ cat.quantidade_cartas }} cartas</small>
-                        {% else %}
-                            <small class="text-white">{{ cat.quantidade_cartas }} cartas adquiridas</small>
-                        {% endif %}
+                        <small class="text-white">
+                            {% if not ficha %}
+                                {{ cat.quantidade_cartas }} cartas
+                            {% else %}
+                                {% get_quantidade_cartas_categoria ficha cat %} de {{ cat.quantidade_cartas }} encontradas
+                            {% endif %}
+                        </small>
                         <a href="#" class="stretched-link"></a>
                     </div>
                 </div>

@@ -4,5 +4,6 @@ from . import views
 app_name = 'hp'
 urlpatterns = [
     path('ficha/<int:pk>', views.ficha, name='ficha'),
+    path('ficha/<int:pk>/folio-universitas', views.folio_universitas_ficha, name="folio_universitas_ficha"),
     path('folio-universitas', views.folio_universitas, name="folio_universitas")
 ]

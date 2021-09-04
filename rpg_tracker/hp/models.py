@@ -1,7 +1,5 @@
 from django.core import validators
 from django.db.models.enums import IntegerChoices
-from django.db.models.fields import IntegerField, NullBooleanField
-from django.utils import translation
 from rpg_tracker.core.models import AbstractBaseModel, FichaBase, MesaBase
 from django.db import models
 from django.urls import reverse
@@ -38,7 +36,6 @@ class CartaFolioUniversitas(AbstractBaseModel):
         verbose_name = "carta Folio Universitas"
         verbose_name_plural = "cartas Folio Universitas"
 
-
 class Equipamentos(AbstractBaseModel):
     class TipoMaterial(IntegerChoices):
         LIVRO = 0, "Livro"
@@ -49,6 +46,10 @@ class Equipamentos(AbstractBaseModel):
 
     nome = models.CharField(verbose_name="Nome", null=False, blank=False, max_length=255)
     material_escolar = models.BooleanField(verbose_name="É material escolar", null=False, blank=False, default=False)
+
+    class Meta:
+        verbose_name = 'equipamento'
+        verbose_name_plural = 'equipamentos'
 
 class Varinha(AbstractBaseModel):
     class Nucleos(IntegerChoices):
@@ -172,13 +173,28 @@ class FichaHP(FichaBase):
     def get_pericias_magia(self):
         return self.get_parents(3)
 
+    def get_quantidade_cartas_por_categoria(self, categoria):
+        return self.cartas.filter(carta__categoria=categoria).count()
+
     class Meta:
         verbose_name = 'ficha'
         verbose_name_plural = 'fichas'
 
+class CartaFolioUniversitasUsuario(AbstractBaseModel):
+    carta = models.ForeignKey(to=CartaFolioUniversitas, null=False, blank=False, related_name='ficha_found', verbose_name='Carta', on_delete=models.RESTRICT)
+    ficha = models.ForeignKey(to=FichaHP, null=False, blank=False, related_name="cartas", verbose_name="Ficha", on_delete=models.RESTRICT)
+
+    class Meta:
+        verbose_name = 'carta do folio universitas encontrada por ficha'
+        verbose_name_plural = 'cartas do folio universitas encontradas por fichas'
+
 class EquipamentoFicha(AbstractBaseModel):
     equip = models.ForeignKey(to=Equipamentos, related_name="fichas", verbose_name="Equipamentos", on_delete=models.RESTRICT, null=False, blank=False)
     ficha = models.ForeignKey(to=FichaHP, related_name="equipamentos", verbose_name="Ficha", on_delete=models.CASCADE, null=False, blank=False)
+
+    class Meta:
+        verbose_name = 'equipamento em ficha'
+        verbose_name_plural = 'equipamentos em fichas'
 
 class PericiasEspecializacoes(AbstractBaseModel):
     class AptidaoChoices(IntegerChoices):
@@ -195,8 +211,8 @@ class PericiasEspecializacoes(AbstractBaseModel):
         return "{0}{1}{2}".format(self.nome, " ("+str(self.AptidaoChoices.choices[self.aptidao][1])+")" if self.aptidao is not None else "", " - "+str(self.pericia_pai) if self.pericia_pai is not None else "")
 
     class Meta:
-        verbose_name = 'perícia e aptidão'
-        verbose_name_plural = 'perícias e aptidões'
+        verbose_name = 'perícia e especialização'
+        verbose_name_plural = 'perícias e especializações'
 
 class EspecializacoesCustomizadasPlayer(AbstractBaseModel):
     ficha = models.ForeignKey(to=FichaHP, related_name="especializacoes_custom", blank=False, null=False, verbose_name='Ficha', on_delete=models.RESTRICT)
@@ -230,3 +246,4 @@ class Mesa(MesaBase):
     class Meta:
         verbose_name = 'mesa'
         verbose_name_plural = 'mesas'
+        
