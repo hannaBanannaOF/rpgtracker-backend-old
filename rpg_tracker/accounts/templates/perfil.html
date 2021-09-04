@@ -43,21 +43,16 @@
                     <div class="card-columns">
                 {% endif %}
                 <div class="card">
-                    <div class="card-header d-flex flex-row justify-content-between">
-                            {% if f.get_content_type == "dnd" %}
-                                D&D 5e
-                            {% elif f.get_content_type == "coc" %}
-                                <div>
-                                    <h5 class="card-title">Call of Cthulhu 7e</h5>
-                                </div>
-                                <div>
-                                    <i class="fab fa-octopus-deploy fa-lg"></i>
-                                </div>
-                            {% endif %}
-                    </div>
+                        {% if f.get_content_type == "dnd" %}
+                            <div class="card-header"><h5 class="card-title">D&D 5e</h5></div>
+                        {% elif f.get_content_type == "coc" %}
+                            <img class="card-img-top" src="{% static 'img/banners/cthulhu.jpg' %}" alt="Call of Cthulhu (7e)">
+                        {% elif f.get_content_type == "hp" %}
+                            <img class="card-img-top" src="{% static 'img/banners/hp.png' %}" alt="Harry Potter (Broomstix)">
+                        {% endif %}
                     <div class="card-body">
                         <p class="card-text">
-                            {{ f.nome_personagem }}
+                            {{ f }}
                         </p>
                         <a href="{{ f.get_absolute_url }}">Ver</a>
                     </div>
