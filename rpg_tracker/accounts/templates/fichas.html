@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+    <div class="container">
+        <div class="jumbotron jumbotron-fluid bg-transparent text-center">
+            <h2 class="display-4">
+                {% if request.user.is_superuser %}
+                    Todas as fichas
+                {% else %}
+                    Minhas Fichas
+                {% endif %}
+            </h2>
+        </div>
+        {% for f in fichas %}
+            {% if forloop.first %}
+                <div class="card-columns">
+            {% endif %}
+            <div class="card">
+                    {% if f.get_content_type == "dnd" %}
+                        <div class="card-header"><h5 class="card-title">D&D 5e</h5></div>
+                    {% elif f.get_content_type == "coc" %}
+                        <img class="card-img-top" src="{% static 'img/banners/cthulhu.jpg' %}" alt="Call of Cthulhu (7e)">
+                    {% elif f.get_content_type == "hp" %}
+                        <img class="card-img-top" src="{% static 'img/banners/hp.png' %}" alt="Harry Potter (Broomstix)">
+                    {% endif %}
+                <div class="card-body">
+                    <p class="card-text">
+                        {{ f }}
+                    </p>
+                    <a href="{{ f.get_absolute_url }}" class="stretched-link"></a>
+                </div>
+            </div>
+            {% if forloop.last %}
+                </div>
+            {% endif %}
+        {% empty %}
+            Sem fichas
+        {% endfor %}
+    </div>
+{% endblock body %}
+    

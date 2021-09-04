@@ -1,13 +1,94 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block js %}
+{{ user.pk|json_script:"userPK" }}
+<script type="text/javascript">
+    $(document).ready(function(){
+        var userPK = JSON.parse(document.getElementById('userPK').textContent);
+        var ws_scheme = window.location.protocol == "https:" ? "wss:" : "ws:";
+        if(userPK !== undefined) {
+            const chatSocket = new WebSocket(
+                ws_scheme
+                + window.location.host
+                + '/ws/'
+                + userPK
+                + '/mesas'
+            );
+
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                let session_div = $("#sessions");
+                let no_sess_mess = $("#no-session-init");
+                if(data.action == "OPEN_SESSION") {
+                    if(no_sess_mess.length > 0) {
+                        no_sess_mess.remove();
+                    }
+                    if(session_div.length == 0) {
+                        $("#initial-message").after("<div id='sessions' class='d-flex flex-sm-column flex-row flex-wrap align-content-around'><div class='mx-auto'><h1 class='display-4'>Mesas iniciadas</h1></div></div>");
+                        session_div = $("#sessions");
+                    }
+                    session_div.append("<div id='session_"+data.session_id+"' class='card'><img class='card-img-top' src="+
+                        data.header.img+" alt="+data.header.alt+">"+
+                        "<div class='card-body'><p class='card-text'>"+
+                            data.session_name+
+                        "</p><a href="+data.link+" class='stretched-link'></a>");
+                } else {
+                    if(session_div !== undefined) { 
+                        if(session_div.children().length > 1){
+                            session_div.children("#session_"+data.session_id).remove()
+                        }
+                        if(session_div.children().length == 1) {
+                            session_div.remove();
+                            $("#initial-message").children(".container").append("<p class='lead' id='no-session-init'>Nenhuma mesa iniciada :c</p>");
+                        }
+                    }
+                }
+            };
+
+            chatSocket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+        }
+    });
+</script>
+{% endblock js %}
 
 {% block body %}
+<div class="container">
     {% if user.is_authenticated %}
-    <div class="jumbotron jumbotron-fluid bg-transparent">
+    <div class="jumbotron jumbotron-fluid bg-transparent" id="initial-message">
         <div class="container">
             <h1 class="display-3">Hello there, {{ user.first_name|default_if_none:"Anon" }}</h1>
-            <p class="lead">Nenhuma mesa iniciada :c</p>
+            {% if not user.get_mesas_iniciadas %}
+                <p class="lead" id="no-session-init">Nenhuma mesa iniciada :c</p>
+            {% endif %}
         </div>
     </div>
+    {% for mesa in user.get_mesas_iniciadas %}
+        {% if forloop.first %}
+            <div id='sessions' class="d-flex flex-sm-row flex-column flex-wrap align-content-around">
+                <div class="mx-auto"><h1 class="display-4">Mesas iniciadas</h1></div>
+        {% endif %}
+                <div id="session_{{ mesa.pk }}" class="card">
+                    {% if mesa.get_content_type == "dnd" %}
+                        <div class="card-header"><h5 class="card-title">D&D 5e</h5></div>
+                    {% elif mesa.get_content_type == "coc" %}
+                        <img class="card-img-top" src="{% static 'img/banners/cthulhu.jpg' %}" alt="Call of Cthulhu (7e)">
+                    {% elif mesa.get_content_type == "hp" %}
+                        <img class="card-img-top" src="{% static 'img/banners/hp.png' %}" alt="Harry Potter (Broomstix)">
+                    {% endif %}
+                    <div class="card-body">
+                        <p class="card-text">
+                            {{ mesa.name }}
+                        </p>
+                        <a href="#" class="stretched-link"></a>
+                    </div>
+                </div>
+        {% if forloop.last %}
+            </div>
+        {% endif %}
+    {% empty %}
+    {% endfor %}
     {% else %}
     <div class="jumbotron jumbotron-fluid bg-transparent">
         <div class="container">
@@ -16,5 +97,5 @@
         </div>
     </div>
     {% endif %}
-        
+</div>
 {% endblock body %}

@@ -16,13 +16,14 @@ django.setup()
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from rpg_tracker.chat import routing as chat_rout
+from rpg_tracker.core import routing as core_rout
 from django.core.asgi import get_asgi_application
 
 application = ProtocolTypeRouter({
     "http" : get_asgi_application(),
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            chat_rout.websocket_urlpatterns
+            chat_rout.websocket_urlpatterns + core_rout.websocket_urlpatterns
         )
     ),
 })

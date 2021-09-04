@@ -1,7 +1,11 @@
+import os
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from polymorphic.models import PolymorphicModel
 from django.contrib.contenttypes.models import ContentType
+from django.conf import settings
 
 # Create your models here.
 class UsuarioManager(BaseUserManager):
@@ -93,6 +97,13 @@ class Usuario(AbstractBaseUser, AbstractBaseModel):
         childs = [self.return_menuitens_child_as_dict(c) for c in menuitem.childs.all()]
         return {str(menuitem.pk):{"title":menuitem.title,"path":menuitem.path, "childs" : childs}}
 
+    def get_mesas_iniciadas(self):
+        ret = []
+        for x in self.fichas.all():
+            if x.mesa and x.mesa.open_session:
+                ret.append(x.mesa)
+        return ret
+
     class Meta:
         verbose_name = 'usuário'
         verbose_name_plural = 'usuários'
@@ -107,6 +118,31 @@ class MesaBase(AbstractBaseModel, PolymorphicModel):
             for x in self.fichas_mesa.all():
                 x.in_session = False
                 x.save()
+        layer = get_channel_layer()
+        for x in self.fichas_mesa.all():
+            g_name = 'sessions_%s' % x.jogador.pk
+            static_banner = ''
+            alter = ''
+            if self.get_content_type() == 'hp':
+                static_banner = 'img/banners/hp.png'
+                alter = "Harry Potter (Broomstix)"
+            elif self.get_content_type() == 'coc':
+                static_banner = 'img/banners/cthulhu.jpg'
+                alter = "Call of Cthulhu (7e)"
+            async_to_sync(layer.group_send)(
+                g_name,
+                {
+                    'type': 'open_close_session',
+                    'action': 'OPEN_SESSION' if self.open_session else 'CLOSE_SESSION',
+                    'session_id': self.pk,
+                    'session_name' : self.name,
+                    'header' : {
+                        'img' : os.path.join(settings.STATIC_URL, static_banner),
+                        'alt' : alter
+                    },
+                    'link' : "#"
+                }
+            )
         super().save(*args, **kwargs)
 
     def is_mestre(self, user):

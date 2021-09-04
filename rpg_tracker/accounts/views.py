@@ -9,4 +9,6 @@ def fichas(request):
     ctx = {}
     if request.user.is_superuser:
         ctx['fichas'] = FichaBase.objects.all()
-    return render(request, 'perfil.html', ctx)
+    else:
+        ctx['fichas'] = request.user.fichas.all()
+    return render(request, 'fichas.html', ctx)

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="container-fluid mt-3">
+        <div class="jumbotron jumbotron-fluid bg-transparent">
+            <div class="container text-center">
+                <h1 class="display-4">{% if ficha %}Meu Folio Universitas{% else %}Folio Universitas{% endif %}</h1>
+                    <p class="lead">{{ categoria.nome }}</p>
+            </div>
+        </div>
+        {{ cartas }}
+    </div>
+{% endblock %}
