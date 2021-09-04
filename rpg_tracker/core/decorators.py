@@ -13,7 +13,7 @@ def can_see_ficha(function, type):
             ficha = get_object_or_404(FichaHP, pk=kwargs['pk'])
         else:
             raise PermissionDenied
-        if ficha.mesa.is_player(request.user) or ficha.mesa.is_mestre(request.user) or ficha.jogador == request.user or request.user.is_superuser:
+        if (ficha.mesa and (ficha.mesa.is_player(request.user) or ficha.mesa.is_mestre(request.user))) or ficha.jogador == request.user or request.user.is_superuser:
             return function(request, *args, **kwargs)
         else:
             raise PermissionDenied
