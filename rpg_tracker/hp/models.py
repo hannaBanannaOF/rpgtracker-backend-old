@@ -99,6 +99,9 @@ class Varinha(AbstractBaseModel):
     tamanho = models.FloatField(verbose_name="Tamanho", null=False, blank=False)
     flexibilidade = models.IntegerField(verbose_name="Flexibilidade", null=False, blank=False, choices=Flexibilidade.choices)
 
+    def __str__(self):
+        return '{0}, {1} centimetros, {2}, núcleo de {3}'.format(self.Madeiras.choices[self.madeira][1], self.tamanho, self.Flexibilidade.choices[self.flexibilidade][1], self.Nucleos.choices[self.nucleo][1])
+
     class Meta:
         verbose_name = 'varinha'
         verbose_name_plural = 'varinhas'
@@ -221,6 +224,9 @@ class EspecializacoesCustomizadasPlayer(AbstractBaseModel):
     valor = models.IntegerField(verbose_name="Valor", null=False, blank=False)
     hint = models.CharField(verbose_name="Dica", null=False, blank=False, max_length=255)
 
+    def __str__(self):
+        return '{0} para {1}'.format(self.nome, self.ficha.nome_personagem)
+
     class Meta:
         verbose_name = 'especialização customizada por player'
         verbose_name_plural = 'especializações customizadas por player'
@@ -229,6 +235,9 @@ class PericiasEspecializacoesFicha(AbstractBaseModel):
     ficha = models.ForeignKey(to=FichaHP, related_name="pericias", blank=False, null=False, verbose_name='Ficha', on_delete=models.RESTRICT)
     pericia = models.ForeignKey(to=PericiasEspecializacoes, related_name='fichas', blank=False, null=False, verbose_name='Perícias e especializações', on_delete=models.RESTRICT)
     valor = models.IntegerField(verbose_name="Valor", null=False, blank=False)
+
+    def __str__(self):
+        return '{0} para {1}'.format(self.pericia, self.ficha.nome_personagem)
 
     class Meta:
         verbose_name = 'perícia/especialização em ficha'

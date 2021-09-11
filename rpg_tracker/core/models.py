@@ -118,6 +118,8 @@ class MesaBase(AbstractBaseModel, PolymorphicModel):
             for x in self.fichas_mesa.all():
                 x.in_session = False
                 x.save()
+            self.mestre.in_session = False
+            self.mestre.save()
         layer = get_channel_layer()
         for x in self.fichas_mesa.all():
             g_name = 'sessions_%s' % x.jogador.pk

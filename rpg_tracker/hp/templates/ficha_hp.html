@@ -19,8 +19,41 @@
                         <p><b>Player: </b><u>{{ ficha.jogador }}</u></p>
                         <p><b>Escola: </b><u>{{ ficha.escola|default_if_none:"" }}</u></p>
                         <p><b>Casa: </b><u>{{ ficha.get_casa_hogwarts_display|default_if_none:"" }}</u></p>
+                        <div class="d-flex flex-sm-row flex-column mb-3">
+                            <b>Ano Escolar: </b>
+                            <div class="d-flex flex-row ml-sm-2">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" disabled {% if ficha.ano_escolar == 1 %}checked{% endif %}>
+                                    <label class="custom-control-label" for="customRadioInline1">1</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" disabled {% if ficha.ano_escolar == 2 %}checked{% endif %}>
+                                    <label class="custom-control-label" for="customRadioInline2">2</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" disabled {% if ficha.ano_escolar == 3 %}checked{% endif %}>
+                                    <label class="custom-control-label" for="customRadioInline2">3</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" disabled {% if ficha.ano_escolar == 4 %}checked{% endif %}>
+                                    <label class="custom-control-label" for="customRadioInline2">4</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" disabled {% if ficha.ano_escolar == 5 %}checked{% endif %}>
+                                    <label class="custom-control-label" for="customRadioInline2">5</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" disabled {% if ficha.ano_escolar == 6 %}checked{% endif %}>
+                                    <label class="custom-control-label" for="customRadioInline2">6</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" disabled {% if ficha.ano_escolar == 7 %}checked{% endif %}>
+                                    <label class="custom-control-label" for="customRadioInline2">7</label>
+                                </div>
+                            </div>
+                        </div>
                         <p><b>Familiar (Nome & tipo): </b><u>{{ ficha.familiar|default_if_none:"" }}</u></p>
-                        
+                        <p><b>Varinha: </b><u>{{ ficha.varinha|default_if_none:"" }}</u></p>
                     </div>
                 </div>
             </div>
