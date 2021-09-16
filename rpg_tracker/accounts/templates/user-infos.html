@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block body %}
+    <div class="container">
+        <div class="mt-3">
+            <div class="jumbotron jumbotron-fluid bg-transparent">
+                <div class="container text-center">
+                    <h1 class="display-4">Informações</h1>
+                </div>
+            </div>
+            <form action="{% url 'accounts:user-info' user.pk %}" method="POST">
+                {% csrf_token %}
+                {% for f in user_form %}
+                    <div class="form-group">
+                        <label for="{{ f.name }}">{{ f.label }}</label>
+                        {% render_field f class="form-control" %}
+                    </div>
+                {% endfor %}
+                <div class="text-right">
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

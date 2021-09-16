@@ -58,7 +58,7 @@
     {% if user.is_authenticated %}
     <div class="jumbotron jumbotron-fluid bg-transparent" id="initial-message">
         <div class="container">
-            <h1 class="display-3">Hello there, {{ user.first_name|default_if_none:"Anon" }}</h1>
+            <h1 class="display-3">Hello there, {{ user.nickname|default_if_none:"Anon" }}</h1>
             {% if not user.get_mesas_iniciadas %}
                 <p class="lead" id="no-session-init">Nenhuma mesa iniciada :c</p>
             {% endif %}

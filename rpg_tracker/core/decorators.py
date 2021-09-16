@@ -1,6 +1,7 @@
 from functools import wraps
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from rpg_tracker.coc.models import FichaCOC
 from rpg_tracker.hp.models import FichaHP
 
@@ -24,5 +25,13 @@ def only_superuser(function):
     def wrapper(request, *args, **kwargs):
         if not request.user.is_superuser:
             raise PermissionDenied
+        return function(request, *args, **kwargs)
+    return wrapper
+
+def has_nickname(function):
+    @wraps(function)
+    def wrapper(request, *args, **kwargs):
+        if request.user.nickname is None or request.user.nickname == "":
+            redirect(reverse("accounts:user-info", request.user.pk))
         return function(request, *args, **kwargs)
     return wrapper

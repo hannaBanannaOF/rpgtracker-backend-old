@@ -1,7 +1,12 @@
+from rpg_tracker.core.forms import UsuarioForm
+from django import forms
+from django.core.exceptions import PermissionDenied
 from rpg_tracker.core.decorators import only_superuser
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from rpg_tracker.core.models import FichaBase
+from django.shortcuts import get_object_or_404, render
+from rpg_tracker.core.models import FichaBase, Usuario
+from django.views.generic import DetailView
+from rpg_tracker.core.forms import UsuarioForm
 
 # Create your views here.
 @login_required
@@ -12,3 +17,33 @@ def fichas(request):
     else:
         ctx['fichas'] = request.user.fichas.all()
     return render(request, 'fichas.html', ctx)
+
+class UserInfoDetailView(DetailView):
+    model = Usuario
+    context_object_name = 'user'
+    template_name = 'user-infos.html'
+
+    user = None
+
+    def get(self, request, *args, **kwargs):
+        if(kwargs.get('pk') != request.user.pk and not request.user.is_superuser):
+            raise PermissionDenied
+        self.user = get_object_or_404(Usuario, pk=kwargs.get('pk'))
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['user_form'] = UsuarioForm(instance=self.user)
+        return ctx
+
+    def post(self, request, *args, **kwargs):
+        form = UsuarioForm(request.POST or None, instance=self.get_object())
+        if form.is_valid():
+            self.object = form.save()
+        else:    
+            self.object = self.get_object()
+        ctx = self.get_context_data(object=self.object)
+        ctx['user_form'] = UsuarioForm(instance=self.object)
+        return self.render_to_response(ctx)
+        
+user_infos = login_required(UserInfoDetailView.as_view())

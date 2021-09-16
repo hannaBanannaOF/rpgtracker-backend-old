@@ -58,18 +58,18 @@ class Usuario(AbstractBaseUser, AbstractBaseModel):
     email = models.EmailField('Email', unique=True, blank=False, null=False)
     password = models.CharField('Senha', blank=False, null=False, max_length=250)
     is_active = models.BooleanField(default=True)
-    first_name = models.CharField('Nome', max_length=100, blank=False, null=False)
-    last_name = models.CharField('Sobrenome', max_length=100, blank=False, null=False)
+    first_name = models.CharField('Nome', max_length=100, blank=True, null=True)
+    last_name = models.CharField('Sobrenome', max_length=100, blank=True, null=True)
+    nickname = models.CharField('Nickname', max_length=100, blank=True, null=True, unique=True)
     is_superuser = models.BooleanField('Superusuário', default=False)
     permissions = models.ManyToManyField(to=MenuPerms, verbose_name='Permissões', blank=True, related_name='permissions_groups')
 
     objects = UsuarioManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
     
     def __str__(self):
-        return '{0} {1}'.format(self.first_name, self.last_name)
+        return '{0} {1}({2})'.format(self.first_name, self.last_name, self.nickname)
 
     @property
     def is_staff(self):

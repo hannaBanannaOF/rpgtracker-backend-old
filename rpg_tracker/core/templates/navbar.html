@@ -62,6 +62,7 @@
                                     {% endif %}
                                 </a>
                             </li>
+                            <li class="nav-item"><a href="{% url 'accounts:user-info' user.pk %}" class="dropdown-item">Meu perfil</a></li>
                             <li class="nav-item"><a href="{% url 'core:logout' %}" class="dropdown-item">Sair</a></li>
                         </ul>
                     </li>
