@@ -104,6 +104,9 @@ class Usuario(AbstractBaseUser, AbstractBaseModel):
                 ret.append(x.mesa)
         return ret
 
+    def is_mestre(self):
+        return MesaBase.objects.filter(mestre=self).count() > 0
+
     class Meta:
         verbose_name = 'usuário'
         verbose_name_plural = 'usuários'

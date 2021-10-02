@@ -16,6 +16,8 @@ def fichas(request):
         ctx['fichas'] = FichaBase.objects.all()
     else:
         ctx['fichas'] = request.user.fichas.all()
+        if request.user.is_mestre():
+            ctx['mestradas'] = FichaBase.mesa.filter(mestre=request.user).all()
     return render(request, 'fichas.html', ctx)
 
 class UserInfoDetailView(DetailView):

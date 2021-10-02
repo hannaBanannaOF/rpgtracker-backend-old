@@ -36,6 +36,9 @@
         {% empty %}
             Sem fichas
         {% endfor %}
+        {% if request.user.is_mestre %}
+            {{ mestradas }}
+        {% endif %}
     </div>
 {% endblock body %}
     
