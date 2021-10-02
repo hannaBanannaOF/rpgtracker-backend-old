@@ -128,7 +128,7 @@ class FichaHP(FichaBase):
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return "{0} - {1}".format(self.nome_personagem, self.jogador)
+        return "{0}{1}".format(self.nome_personagem, " ("+self.mesa.nome+")" if self.mesa is not None else "")
 
     def get_absolute_url(self):
         return reverse('hp:ficha', kwargs={'pk': self.pk})

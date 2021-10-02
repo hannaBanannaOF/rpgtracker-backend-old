@@ -108,7 +108,7 @@ class FichaCOC(FichaBase):
     cthulhu_mythos = models.IntegerField(verbose_name='Cthulhu Mythos', blank=True, null=True)
 
     def __str__(self):
-        return '{0} ({1})'.format(self.nome_personagem, self.jogador)
+        return '{0}{1}'.format(self.nome_personagem, " ("+self.mesa.name+")" if self.mesa is not None else '')
 
     def get_absolute_url(self):
         return reverse('coc:ficha', kwargs={'pk': self.pk})
