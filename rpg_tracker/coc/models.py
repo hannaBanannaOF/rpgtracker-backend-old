@@ -6,6 +6,17 @@ from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
+class PulpTalents(AbstractBaseModel):
+    name = models.CharField(verbose_name="Nome", max_length=50, null=False, blank=False)
+    desc = models.TextField(verbose_name="Descrição", null=False, blank=False)
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        verbose_name="Talento (PCoC)"
+        verbose_name_plural="Talentos (PCoC)"
+
 class Skills(AbstractBaseModel):
     class SkillKindChoices(IntegerChoices):
         INTERPERSOAL = 0, "Interpessoal"
@@ -17,9 +28,10 @@ class Skills(AbstractBaseModel):
         COMMON = 0, 'Comum'
         ANTIQUE = 1, '1920 Era'
         MODERN = 2, 'Moderna'
+        PULP = 3, 'Pulp'
 
     name = models.CharField(verbose_name='Nome', blank=False, null=False, max_length=50)
-    base_value = models.IntegerField(verbose_name='Valor base', blank=True, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
+    base_value = models.IntegerField(verbose_name='Valor base', blank=True, null=False, validators=[MinValueValidator(0)], default=0)
     skill_rarity = models.IntegerField(verbose_name='Raridade', choices=SkillRarity.choices, blank=False, null=False)
     parent_skill = models.ForeignKey(to='self', verbose_name='Skill pai', null=True, blank=True, related_name='specializations', on_delete=models.CASCADE)
     skill_kind = models.IntegerField(verbose_name='Tipo de skill', choices=SkillKindChoices.choices, blank=False, null=False)
@@ -75,14 +87,14 @@ class FichaCOC(FichaBase):
     sex = models.CharField(verbose_name='Sexo', blank=False, null=False, max_length=50)
     birthplace = models.CharField(verbose_name='Local de nascimento', blank=False, null=False, max_length=50)
     residence = models.CharField(verbose_name='Residência', blank=False, null=False, max_length=50)
-    strength = models.IntegerField(verbose_name='Força', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    constitution = models.IntegerField(verbose_name='Constituição', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    size = models.IntegerField(verbose_name='Tamanho', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    dexterity = models.IntegerField(verbose_name='Destreza', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    appearence = models.IntegerField(verbose_name='Aparência', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    inteligence = models.IntegerField(verbose_name='Inteligência', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    power = models.IntegerField(verbose_name='Poder', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    education = models.IntegerField(verbose_name='Educação', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    strength = models.IntegerField(verbose_name='Força', blank=False, null=False, validators=[MinValueValidator(0)])
+    constitution = models.IntegerField(verbose_name='Constituição', blank=False, null=False, validators=[MinValueValidator(0)])
+    size = models.IntegerField(verbose_name='Tamanho', blank=False, null=False, validators=[MinValueValidator(0)])
+    dexterity = models.IntegerField(verbose_name='Destreza', blank=False, null=False, validators=[MinValueValidator(0)])
+    appearence = models.IntegerField(verbose_name='Aparência', blank=False, null=False, validators=[MinValueValidator(0)])
+    inteligence = models.IntegerField(verbose_name='Inteligência', blank=False, null=False, validators=[MinValueValidator(0)])
+    power = models.IntegerField(verbose_name='Poder', blank=False, null=False, validators=[MinValueValidator(0)])
+    education = models.IntegerField(verbose_name='Educação', blank=False, null=False, validators=[MinValueValidator(0)])
     luck = models.IntegerField(verbose_name='Sorte', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
     move_rate = models.IntegerField(verbose_name='Movimento', blank=True, null=False)
     hp = models.IntegerField(verbose_name='HP', blank=True, null=False)
@@ -96,7 +108,7 @@ class FichaCOC(FichaBase):
     bonus_dmg = models.IntegerField(verbose_name='Bonus de dano', blank=True, null=False)
     dodge = models.IntegerField(verbose_name='Esquiva', blank=True, null=False)
     dodge_improv = models.BooleanField(verbose_name='Improv. Check na esquiva', null=False, default=False, blank=False)
-    language_own = models.IntegerField(verbose_name='Idioma natural', blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    language_own = models.IntegerField(verbose_name='Idioma natural', blank=True, null=True, validators=[MinValueValidator(0)])
     language_own_improv = models.BooleanField(verbose_name='Improv. Check no idioma natural', null=False, default=False, blank=False)
     ocupation = models.ForeignKey(to=Ocupation, on_delete=models.RESTRICT, verbose_name='Ocupação', related_name='fichas')
     ocupational_skill_points = models.IntegerField(verbose_name='Pontos de perícia ocupacionais', blank=True, null=False)
@@ -106,6 +118,9 @@ class FichaCOC(FichaBase):
     indefinity_insanity = models.BooleanField(verbose_name='Insanidade Indefinida', blank=False, null=False, default=False)
     credit_rating = models.IntegerField(verbose_name='Renk de crédito', blank=True, null=True)
     cthulhu_mythos = models.IntegerField(verbose_name='Cthulhu Mythos', blank=True, null=True)
+    pulp_cthulhu = models.BooleanField(verbose_name="Pulp Cthulhu", blank=False, default=False, null=False)
+    pulp_archetype = models.CharField(verbose_name="Arquétipo de Heroi", blank=True, null=True, max_length=50)
+    pulp_talents = models.ManyToManyField(to=PulpTalents, verbose_name="Talentos (PCoC)", related_name="fichas")
 
     def __str__(self):
         return '{0}{1}'.format(self.nome_personagem, " ("+self.mesa.name+")" if self.mesa is not None else '')
@@ -115,7 +130,10 @@ class FichaCOC(FichaBase):
 
     def save(self, *args, **kwargs):
         if self._state.adding:
-            self.max_hp = (self.constitution + self.size) / 10
+            if self.pulp_cthulhu:
+                self.max_hp = (self.constitution + self.size) / 5
+            else:
+                self.max_hp = (self.constitution + self.size) / 10
             self.hp = self.max_hp
             self.max_mp = self.power / 5
             self.mp = self.max_mp
@@ -127,9 +145,6 @@ class FichaCOC(FichaBase):
                 self.move_rate = 9
             elif self.strength >= self.size or self.dexterity >= self.size:
                 self.move_rate = 8
-            
-            if self.age >= 40:
-                self.move_rate = self.move_rate - 1
 
             str_siz = self.strength + self.size
             if str_siz > 64 and str_siz < 85:
@@ -174,7 +189,6 @@ class FichaCOC(FichaBase):
                     self.ocupational_skill_points = self.education * 2 + self.dexterity * 2
 
         self.personal_interest_skill_points = self.inteligence * 2
-
         super().save(*args, **kwargs)
 
     def get_skill_list(self):
