@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'developmentKey')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -45,19 +45,22 @@ INSTALLED_APPS = [
     'rest_framework',
     'channels',
     'social_django',
+    'oauth2_provider',
+    'rest_framework_social_oauth2',
+    'corsheaders',
     # rpg
     'rpg_tracker.core',
     'rpg_tracker.accounts',
     'rpg_tracker.dnd',
     'rpg_tracker.coc',
     'rpg_tracker.hp',
-    'rpg_tracker.api',
     'rpg_tracker.chat',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -78,6 +81,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -147,15 +152,31 @@ LOGOUT_URL = 'core:logout'
 LOGOUT_REDIRECT_URL = 'core:login'
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.discord.DiscordOAuth2',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'rpg_tracker.utils.my_jwt_response_handler'
+}
 
 # REST
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
 }
+
+# CORS
+CORS_ORIGIN_WHITELIST = [
+    'htpp://localhost:3000',
+]
 
 # Channels
 CHANNEL_LAYERS = {
@@ -172,11 +193,11 @@ DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
 # Social Auth
 SOCIAL_AUTH_DISCORD_KEY = '855087409417814038'
-SOCIAL_AUTH_DISCORD_SECRET = os.getenv('DISCORD_OAUTH_SECRET', 'DiscordOauthSecretKey') 
+SOCIAL_AUTH_DISCORD_SECRET = os.getenv('DISCORD_OAUTH_SECRET', '5SKsryZRd95cKaJO81xYxydanp9hExlY') 
 SOCIAL_AUTH_DISCORD_SCOPE = ['email']
 SOCIAL_AUTH_NEW_USER_REDIRECT_URL = 'accounts:profile'
 
-#DEPLOY TO HEROKU
+# DEPLOY TO HEROKU
 if not DEBUG:
     # import dj_database_url
     import django_heroku

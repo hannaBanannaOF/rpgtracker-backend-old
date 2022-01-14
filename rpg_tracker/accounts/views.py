@@ -7,8 +7,17 @@ from django.shortcuts import get_object_or_404, render
 from rpg_tracker.core.models import FichaBase, Usuario
 from django.views.generic import DetailView
 from rpg_tracker.core.forms import UsuarioForm
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import UserSerializer
 
 # Create your views here.
+@api_view(['GET'])
+def current_user(request):
+    
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
+
 @login_required
 def fichas(request):
     ctx = {}
