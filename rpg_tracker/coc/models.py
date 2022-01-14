@@ -120,7 +120,7 @@ class FichaCOC(FichaBase):
     cthulhu_mythos = models.IntegerField(verbose_name='Cthulhu Mythos', blank=True, null=True)
     pulp_cthulhu = models.BooleanField(verbose_name="Pulp Cthulhu", blank=False, default=False, null=False)
     pulp_archetype = models.CharField(verbose_name="Arquétipo de Heroi", blank=True, null=True, max_length=50)
-    pulp_talents = models.ManyToManyField(to=PulpTalents, verbose_name="Talentos (PCoC)", related_name="fichas")
+    pulp_talents = models.ManyToManyField(to=PulpTalents, verbose_name="Talentos (PCoC)", related_name="fichas", blank=True, null=True)
 
     def __str__(self):
         return '{0}{1}'.format(self.nome_personagem, " ("+self.mesa.name+")" if self.mesa is not None else '')
