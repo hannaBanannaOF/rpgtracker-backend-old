@@ -11,4 +11,4 @@ class SkillOnFichaAdmin(admin.ModelAdmin):
 
 admin.site.register(FichaCOC, FichaCOCAdmin)
 admin.site.register(SkillsOnFicha, SkillOnFichaAdmin)
-admin.site.register([Ocupation, Skills, SkillsOnFicha, Ammo, Weapons, WeaponsInFicha, MesaCOC, PulpTalents])
+admin.site.register([Ocupation, Skills, Ammo, Weapons, WeaponsInFicha, MesaCOC, PulpTalents])
