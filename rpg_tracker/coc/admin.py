@@ -4,7 +4,7 @@ from .models import FichaCOC, Ocupation, Skills, SkillsOnFicha, Ammo, Weapons, W
 # Register your models here.
 
 class FichaCOCAdmin(admin.ModelAdmin):
-    list_filter = ('player',)
+    list_filter = ('jogador',)
 
 class SkillOnFichaAdmin(admin.ModelAdmin):
     list_filter = ('ficha',)
