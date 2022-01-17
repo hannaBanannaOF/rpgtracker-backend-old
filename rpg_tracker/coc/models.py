@@ -212,7 +212,7 @@ class FichaCOC(FichaBase):
         verbose_name_plural = 'fichas'
 
 class SkillsOnFicha(AbstractBaseModel):
-    ficha = models.ForeignKey(to=FichaCOC, related_name='skills', blank=False, null=False, verbose_name='Ficha', on_delete=models.RESTRICT)
+    ficha = models.ForeignKey(to=FichaCOC, related_name='skills', blank=False, null=False, verbose_name='Ficha', on_delete=models.CASCADE)
     skill = models.ForeignKey(to=Skills, blank=False, null=False, related_name='fichas', verbose_name='Skill', on_delete=models.RESTRICT)
     value = models.IntegerField(verbose_name='Valor', blank=False, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)])
     skill_improv = models.BooleanField(verbose_name='Improvement', default=False)
