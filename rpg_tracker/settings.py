@@ -176,6 +176,7 @@ REST_FRAMEWORK = {
 # CORS
 CORS_ORIGIN_WHITELIST = [
     'htpp://localhost:3000',
+    'http://localhost:8080',
 ]
 
 # Channels
