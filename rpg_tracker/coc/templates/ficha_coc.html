@@ -38,7 +38,13 @@
             <div class="col-12 col-sm-6 col-md-3">
                 <div class="card h-100">
                     <div class="card-header bg-dark text-white text-center">
-                        <p class="lead mb-0">Investigador</p>
+                        <p class="lead mb-0">
+                            {% if ficha.pulp_cthulhu %}
+                                Herói (PCoC)
+                            {% else %}
+                                Investigador
+                            {% endif %}
+                        </p>
                     </div>
                     <div class="card-body">
                         <p><b>Nome: </b><u>{{ ficha.nome_personagem }}</u></p>
@@ -48,6 +54,9 @@
                         <p><b>Sexo/Gênero: </b><u>{{ ficha.sex }}</u></p>
                         <p><b>Residência: </b><u>{{ ficha.residence }}</u></p>
                         <p><b>Local de Nascimento: </b><u>{{ ficha.birthplace }}</u></p>
+                        {% if ficha.pulp_cthulhu %}
+                            <p><b>Arquétipo: </b><u>{{ ficha.pulp_archetype|default_if_none:"" }}</u></p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -101,12 +110,14 @@
                                             <h5>Inconsciente</h5>
                                         {% endif %}
                                     </div>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" name="mjr_wnd" id="mjr_wnd" class="custom-control-input" disabled {% if ficha.major_wound %}checked{% endif %}>
-                                        <label class="custom-control-label text-dark" for="mjr_wnd">Major Wound</label>
-                                    </div>
+                                    {% if not ficha.pulp_cthulhu %}
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" name="mjr_wnd" id="mjr_wnd" class="custom-control-input" disabled {% if ficha.major_wound %}checked{% endif %}>
+                                            <label class="custom-control-label text-dark" for="mjr_wnd">Major Wound</label>
+                                        </div>
+                                    {% endif %}
                                     <div class="range-wrap">
-                                        <input name="hp_rng" type="range" class="form-control-range range" id="hp_rng" min="0" max="20" value="{{ ficha.hp }}" step="1" disabled>
+                                        <input name="hp_rng" type="range" class="form-control-range range" id="hp_rng" min="0" max="{{ ficha.max_hp }}" value="{{ ficha.hp }}" step="1" disabled>
                                         <output class="bubble" for="hp_rng"></output>
                                     </div>  
                                 </div>
@@ -282,5 +293,37 @@
                 </div>
             </div>
         </div>
+        {% if ficha.pulp_cthulhu %}
+        <div class="col-12">
+            <div class="card h-100">
+                <div class="card-header bg-secondary text-center">
+                    <h3 class="card-title mb-0">Talentos (PCoC)</h3>
+                </div>
+                <div class="card-body align-items-center">
+                    <div class="accordion" id="accordionTalentos">
+                        {% for talento in ficha.pulp_talents.all %}
+                            <div class="card">
+                                <div class="card-header" id="heading_{{ talento.pk }}">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse_{{ talento.pk }}" aria-expanded="true" aria-controls="collapse_{{ talento.pk }}">
+                                            {{ talento }}
+                                        </button>
+                                    </h2>
+                                </div>
+                        
+                                <div id="collapse_{{ talento.pk }}" class="collapse" aria-labelledby="heading_{{ talento.pk }}" data-parent="#accordionTalentos">
+                                    <div class="card-body">
+                                        {{ talento.desc }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="pb-0">Sem talentos!</p>
+                        {% endfor %}
+                    </div>  
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 {% endblock body %}
