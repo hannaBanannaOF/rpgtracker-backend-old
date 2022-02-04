@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'channels',
     'social_django',
     'oauth2_provider',
-    'rest_framework_social_oauth2',
+    'rest_framework_simplejwt',
     'corsheaders',
     # rpg
     'rpg_tracker.core',
@@ -152,7 +152,6 @@ LOGOUT_URL = 'core:logout'
 LOGOUT_REDIRECT_URL = 'core:login'
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.discord.DiscordOAuth2',
-    'rest_framework_social_oauth2.backends.DjangoOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
 JWT_AUTH = {
@@ -165,7 +164,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
         'rest_framework.authentication.SessionAuthentication',
@@ -175,7 +174,7 @@ REST_FRAMEWORK = {
 
 # CORS
 CORS_ORIGIN_WHITELIST = [
-    'htpp://localhost:3000',
+    'http://localhost:3000',
     'http://localhost:8080',
 ]
 
