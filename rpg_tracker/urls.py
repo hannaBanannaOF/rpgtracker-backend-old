@@ -28,9 +28,7 @@ urlpatterns = [
     #path('dnd/', include('rpg_tracker.dnd.urls', namespace='dnd')),
     path('admin/', admin.site.urls),
     path('api/', include('rpg_tracker.api.urls', namespace='api')),
-    path('chat/', include('rpg_tracker.chat.urls', namespace='chat')),
     path('social-auth/', include('social_django.urls', namespace="social")),
-    path(r'^social-oauth2/', include('rest_framework_social_oauth2.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rpg_tracker.core.models import Usuario
+from rpg_tracker.core.models import Usuario 
 
 
 class UserSerializer(serializers.ModelSerializer):

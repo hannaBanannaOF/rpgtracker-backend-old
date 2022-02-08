@@ -1,7 +1,5 @@
 from rpg_tracker.core.forms import UsuarioForm
-from django import forms
 from django.core.exceptions import PermissionDenied
-from rpg_tracker.core.decorators import only_superuser
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 from rpg_tracker.core.models import FichaBase, Usuario
@@ -10,6 +8,8 @@ from rpg_tracker.core.forms import UsuarioForm
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import UserSerializer
+from rpg_tracker.core.serializers import FichaSerializer
+from rest_framework.generics import ListAPIView
 
 # Create your views here.
 @api_view(['GET'])
@@ -18,6 +18,13 @@ def current_user(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
+class MinhasFichasView(ListAPIView):
+    serializer_class = FichaSerializer
+    def get_queryset(self):
+        user = self.request.user
+        return user.fichas.all()
+
+############################ NO API CALLS ###############################
 @login_required
 def fichas(request):
     ctx = {}

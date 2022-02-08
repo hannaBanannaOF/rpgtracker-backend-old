@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'developmentKey')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -45,8 +45,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'channels',
     'social_django',
-    'oauth2_provider',
     'rest_framework_simplejwt',
+    'rest_social_auth', 
     'corsheaders',
     # rpg
     'rpg_tracker.core',
@@ -154,9 +154,6 @@ AUTHENTICATION_BACKENDS = [
     'social_core.backends.discord.DiscordOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
-JWT_AUTH = {
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'rpg_tracker.utils.my_jwt_response_handler'
-}
 
 # REST
 REST_FRAMEWORK = {
@@ -165,8 +162,6 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  
-        'rest_framework_social_oauth2.authentication.SocialAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
@@ -192,10 +187,10 @@ CHANNEL_LAYERS = {
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
 # Social Auth
+REST_SOCIAL_OAUTH_REDIRECT_URI = "/login/oauth/callback"
 SOCIAL_AUTH_DISCORD_KEY = '855087409417814038'
-SOCIAL_AUTH_DISCORD_SECRET = os.getenv('DISCORD_OAUTH_SECRET', '5SKsryZRd95cKaJO81xYxydanp9hExlY') 
+SOCIAL_AUTH_DISCORD_SECRET = os.getenv('DISCORD_OAUTH_SECRET', 'discordSecret') 
 SOCIAL_AUTH_DISCORD_SCOPE = ['email']
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = 'accounts:profile'
 
 # DEPLOY TO HEROKU
 if not DEBUG:
@@ -208,3 +203,7 @@ if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     # Force HTTPS in the final URIs
     SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+    CORS_ORIGIN_WHITELIST = [
+        'http://rpgtracker.herokuapp.com',
+        'https://rpgtracker.herokuapp.com',
+    ]
