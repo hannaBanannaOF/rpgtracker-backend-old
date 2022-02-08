@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class HpConfig(AppConfig):
-    name = 'hp'
+    name = 'rpg_tracker.hp'

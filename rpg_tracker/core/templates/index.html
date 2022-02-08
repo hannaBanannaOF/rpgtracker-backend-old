@@ -6,7 +6,7 @@
     $(document).ready(function(){
         var userPK = JSON.parse(document.getElementById('userPK').textContent);
         var ws_scheme = window.location.protocol == "https:" ? "wss:" : "ws:";
-        if(userPK !== undefined) {
+        if(userPK !== undefined && userPK !== null) {
             const chatSocket = new WebSocket(
                 ws_scheme
                 + window.location.host

@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class DndConfig(AppConfig):
-    name = 'dnd'
+    name = 'rpg_tracker.dnd'

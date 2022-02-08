@@ -45,19 +45,22 @@ INSTALLED_APPS = [
     'rest_framework',
     'channels',
     'social_django',
+    'rest_framework_simplejwt',
+    'rest_social_auth', 
+    'corsheaders',
     # rpg
     'rpg_tracker.core',
     'rpg_tracker.accounts',
     'rpg_tracker.dnd',
     'rpg_tracker.coc',
     'rpg_tracker.hp',
-    'rpg_tracker.api',
     'rpg_tracker.chat',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -78,6 +81,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -153,9 +158,20 @@ AUTHENTICATION_BACKENDS = [
 # REST
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
 }
+
+# CORS
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+    'http://localhost:8080',
+]
 
 # Channels
 CHANNEL_LAYERS = {
@@ -171,12 +187,12 @@ CHANNEL_LAYERS = {
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
 
 # Social Auth
+REST_SOCIAL_OAUTH_REDIRECT_URI = "/login/oauth/callback"
 SOCIAL_AUTH_DISCORD_KEY = '855087409417814038'
-SOCIAL_AUTH_DISCORD_SECRET = os.getenv('DISCORD_OAUTH_SECRET', 'DiscordOauthSecretKey') 
+SOCIAL_AUTH_DISCORD_SECRET = os.getenv('DISCORD_OAUTH_SECRET', 'discordSecret') 
 SOCIAL_AUTH_DISCORD_SCOPE = ['email']
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = 'accounts:profile'
 
-#DEPLOY TO HEROKU
+# DEPLOY TO HEROKU
 if not DEBUG:
     # import dj_database_url
     import django_heroku
@@ -187,3 +203,7 @@ if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     # Force HTTPS in the final URIs
     SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+    CORS_ORIGIN_WHITELIST = [
+        'http://rpgtracker.herokuapp.com',
+        'https://rpgtracker.herokuapp.com',
+    ]

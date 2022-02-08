@@ -1,12 +1,16 @@
 from django.urls import path
 from django.urls.conf import include
-from . import views
-from rest_framework import routers
-
-routerCoc = routers.DefaultRouter()
-routerCoc.register(r'ocupations', views.OcupationViewSet)
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 app_name = 'api'
 urlpatterns = [
-    path('coc/', include(routerCoc.urls)),
+    path('v1/token/auth/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('v1/token/social-auth/', include('rest_social_auth.urls_jwt_pair')),
+    path('v1/', include('rpg_tracker.api.url_v1', namespace='api_v1')),
 ]
