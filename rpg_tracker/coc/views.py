@@ -6,8 +6,17 @@ from . import tables
 from . import forms
 from rpg_tracker.core.decorators import can_see_ficha
 from django.contrib.auth.decorators import login_required
+from rest_framework.generics import RetrieveAPIView
+from .serializers import FichaCOCSerializer
 
 # Create your views here.
+class FichaDetails(RetrieveAPIView):
+    queryset = models.FichaCOC
+    serializer_class = FichaCOCSerializer
+
+
+############################ NO API CALLS ###############################
+
 class FichaDetailView(DetailView):
     model = models.FichaCOC
     template_name = 'ficha_coc.html'

@@ -207,6 +207,10 @@ class FichaCOC(FichaBase):
 
         return dict(sorted(skill_list.items(), key=lambda k_v: k_v[1]["name"]))
 
+    def get_skill_list_as_array(self):
+        list = self.get_skill_list()
+        return list.values()
+
     class Meta:
         verbose_name = 'ficha'
         verbose_name_plural = 'fichas'

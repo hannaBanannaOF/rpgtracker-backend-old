@@ -7,7 +7,7 @@ from django.views.generic import DetailView
 from rpg_tracker.core.forms import UsuarioForm
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import UserSerializer
+from rpg_tracker.core.serializers import UserSerializer
 from rpg_tracker.core.serializers import FichaSerializer
 from rest_framework.generics import ListAPIView
 
