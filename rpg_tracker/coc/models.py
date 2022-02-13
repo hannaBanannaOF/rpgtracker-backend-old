@@ -105,7 +105,7 @@ class FichaCOC(FichaBase):
     max_san = models.IntegerField(verbose_name='Sanidade Máxima', blank=True, null=False, validators=[MinValueValidator(0), MaxValueValidator(100)], default=99)
     max_mp = models.IntegerField(verbose_name='MP Máximo', blank=True, null=False)
     build = models.IntegerField(verbose_name='Corpo', blank=True, null=False)
-    bonus_dmg = models.IntegerField(verbose_name='Bonus de dano', blank=True, null=False)
+    bonus_dmg = models.CharField(verbose_name='Bonus de dano', blank=True, null=False, max_length=10)
     dodge = models.IntegerField(verbose_name='Esquiva', blank=True, null=False)
     dodge_improv = models.BooleanField(verbose_name='Improv. Check na esquiva', null=False, default=False, blank=False)
     language_own = models.IntegerField(verbose_name='Idioma natural', blank=True, null=True, validators=[MinValueValidator(0)])
@@ -149,13 +149,13 @@ class FichaCOC(FichaBase):
             str_siz = self.strength + self.size
             if str_siz > 64 and str_siz < 85:
                 self.build = -1
-                self.bonus_dmg = -1
+                self.bonus_dmg = '-1'
             elif str_siz > 84 and str_siz < 125:
                 self.build = 0
-                self.bonus_dmg = 0
+                self.bonus_dmg = '-'
             elif str_siz > 124 and str_siz < 165:
                 self.build = 1
-                self.bonus_dmg = 1
+                self.bonus_dmg = '+1D4'
 
             self.dodge = self.dexterity / 2
             self.language_own = self.education
@@ -194,20 +194,20 @@ class FichaCOC(FichaBase):
     def get_skill_list(self):
         skill_list = {}
         for s in Skills.objects.all():
-            skill_list.update({str(s.pk) : {"name":s.full_name,"value": s.absolute_value,"improv":False}})
+            skill_list.update({str(s.pk) : {"id": s.pk, "name":s.full_name,"value": s.absolute_value,"improv":False}})
         
         for s in self.skills.all():
             if skill_list.get(str(s.skill.pk)) is not None:
-                skill_list.update({str(s.skill.pk) : {"name":s.skill.full_name,"value":s.value,"improv":s.skill_improv}})
+                skill_list.update({str(s.skill.pk) : {"id": s.skill.pk, "name":s.skill.full_name,"value":s.value,"improv":s.skill_improv}})
 
-        skill_list.update({"credit-ratind":{"name":"Credit rating", "value":self.credit_rating if self.credit_rating is not None else 0, "improv":False}})
-        skill_list.update({"dodge":{"name":"Dodge", "value":self.dodge, "improv":self.dodge_improv}})
-        skill_list.update({"cthulhu-mythos":{"name":"Cthulhu Mythos", "value":self.cthulhu_mythos if self.cthulhu_mythos is not None else 0, "improv":False}})
-        skill_list.update({"language-own":{"name":"Own (Language)", "value":self.language_own, "improv":self.language_own_improv}})
+        skill_list.update({"credit-rating":{"id": "credit-rating", "name":"Credit rating", "value":self.credit_rating if self.credit_rating is not None else 0, "improv":False}})
+        skill_list.update({"dodge":{"id": "dodge", "name":"Dodge", "value":self.dodge, "improv":self.dodge_improv}})
+        skill_list.update({"cthulhu-mythos":{"id": "cthulhu-mythos", "name":"Cthulhu Mythos", "value":self.cthulhu_mythos if self.cthulhu_mythos is not None else 0, "improv":False}})
+        skill_list.update({"language-own":{"id": "language-own", "name":"Own (Language)", "value":self.language_own, "improv":self.language_own_improv}})
 
         return dict(sorted(skill_list.items(), key=lambda k_v: k_v[1]["name"]))
 
-    def get_skill_list_as_array(self):
+    def skill_list(self):
         list = self.get_skill_list()
         return list.values()
 
@@ -242,13 +242,12 @@ class Ammo(AbstractBaseModel):
 class Weapons(AbstractBaseModel):
     name = models.CharField(verbose_name='Nome', blank=False, null=False, max_length=50)
     ammo = models.ForeignKey(to=Ammo, related_name='guns', blank=True, null=True, verbose_name='Munição', on_delete=models.RESTRICT)
-    range = models.IntegerField(verbose_name='Alcance', null=True, blank=True)
+    range = models.CharField(verbose_name='Alcance', null=True, blank=True, max_length=20)
     attacks = models.IntegerField(verbose_name='Ataques por round', null=False, blank=False)
     malfunction = models.IntegerField(verbose_name='Falha', blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
     is_melee = models.BooleanField(verbose_name='Mano a mano', blank=False, null=False, default=True)
     damage = models.CharField(verbose_name='Dano', blank=False, null=False, max_length=20)
     skill_used = models.ForeignKey(to=Skills, verbose_name='Skill usada', blank=False, null=False, related_name='weapons', on_delete=models.RESTRICT)
-
 
     def __str__(self):
         return self.name
