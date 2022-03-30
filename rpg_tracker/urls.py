@@ -16,9 +16,6 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls.static import static
-from django.conf import settings
-
 
 urlpatterns = [
     path('', include('rpg_tracker.core.urls', namespace='core')),
@@ -30,6 +27,3 @@ urlpatterns = [
     path('api/', include('rpg_tracker.api.urls', namespace='api')),
     path('social-auth/', include('social_django.urls', namespace="social")),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -48,13 +48,14 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_social_auth', 
     'corsheaders',
+    'hbcommons',
     # rpg
     'rpg_tracker.core',
     'rpg_tracker.accounts',
     'rpg_tracker.dnd',
     'rpg_tracker.coc',
     'rpg_tracker.hp',
-    'rpg_tracker.chat',
+    'rpg_tracker.feature_toggle',
 ]
 
 MIDDLEWARE = [
@@ -140,10 +141,6 @@ USE_TZ = False
 
 STATIC_URL = '/core/static/'
 
-# Media
-MEDIA_ROOT = os.path.join(BASE_DIR, 'rpg_tracker', 'media')
-MEDIA_URL = '/media/'
-
 # Auth
 AUTH_USER_MODEL = 'core.Usuario'
 LOGIN_URL = 'core:login'
@@ -151,6 +148,7 @@ LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_URL = 'core:logout'
 LOGOUT_REDIRECT_URL = 'core:login'
 AUTHENTICATION_BACKENDS = [
+    'hbcommons.oauthconsumer.HannaBanannaOAuth2',
     'social_core.backends.discord.DiscordOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
@@ -162,7 +160,6 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
 }
@@ -191,6 +188,10 @@ REST_SOCIAL_OAUTH_REDIRECT_URI = "/login/oauth/callback"
 SOCIAL_AUTH_DISCORD_KEY = '855087409417814038'
 SOCIAL_AUTH_DISCORD_SECRET = os.getenv('DISCORD_OAUTH_SECRET', 'discordSecret') 
 SOCIAL_AUTH_DISCORD_SCOPE = ['email']
+SOCIAL_AUTH_HANNABANANNA_KEY = os.getenv("HBAUTH_KEY","fumNnHbpqr6Ya4UuPhXbDeBKVpCZXLgclHTbqkD6")
+SOCIAL_AUTH_HANNABANANNA_SECRET = os.getenv("HBAUTH_SECRET", "tKHFVtcUl0Kc1ja3oUTmyowDOFhLEmVhB2eAvlOTmBD7NnqvZ4ixROwQHvjZGcEDqjGNLCQFrmIiA822GCdx3G50DzB4GgAjD3ALrmUK1rw61azrsSdMvvBz1olmroVw")
+
+HANNABANANNA_AUTH_URL = os.getenv("HBAUTH_URL", "http://localhost:8000")
 
 # DEPLOY TO HEROKU
 if not DEBUG:

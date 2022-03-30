@@ -5,7 +5,7 @@ from rpg_tracker.core.models import Usuario
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields = ('email','first_name', 'last_name', 'nickname')
+        fields = ('email','first_name', 'last_name', 'nickname', 'photo')
 
 class FichaSerializer(serializers.ModelSerializer):
     class Meta:
