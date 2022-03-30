@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -192,6 +194,12 @@ SOCIAL_AUTH_HANNABANANNA_KEY = os.getenv("HBAUTH_KEY","fumNnHbpqr6Ya4UuPhXbDeBKV
 SOCIAL_AUTH_HANNABANANNA_SECRET = os.getenv("HBAUTH_SECRET", "tKHFVtcUl0Kc1ja3oUTmyowDOFhLEmVhB2eAvlOTmBD7NnqvZ4ixROwQHvjZGcEDqjGNLCQFrmIiA822GCdx3G50DzB4GgAjD3ALrmUK1rw61azrsSdMvvBz1olmroVw")
 
 HANNABANANNA_AUTH_URL = os.getenv("HBAUTH_URL", "http://localhost:8000")
+
+#  Sentry
+sentry_sdk.init(
+    dsn=os.getenv('SENTRY_DSN', ""),
+    integrations=[DjangoIntegration()]
+)
 
 # DEPLOY TO HEROKU
 if not DEBUG:
