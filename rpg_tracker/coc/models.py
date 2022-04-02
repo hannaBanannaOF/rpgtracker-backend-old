@@ -147,6 +147,7 @@ class FichaCOC(FichaBase):
                 self.move_rate = 8
 
             str_siz = self.strength + self.size
+            self.build = -2
             if str_siz > 64 and str_siz < 85:
                 self.build = -1
                 self.bonus_dmg = '-1'

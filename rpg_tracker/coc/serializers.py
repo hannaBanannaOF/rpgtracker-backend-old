@@ -23,7 +23,7 @@ class FichaCOCSerializer(serializers.ModelSerializer):
         fields =  ['age', 'birthplace', 'residence', 'sex', 'nome_personagem', 'jogador', 'pulp_cthulhu', 'pulp_archetype',
                     'strength', 'constitution', 'size', 'dexterity', 'appearence', 'inteligence', 'power', 'education', 'move_rate',
                     'skill_list', 'hp', 'max_hp', 'major_wound', 'san', 'max_san', 'start_san', 'temporary_insanity', 
-                    'indefinity_insanity', 'luck', 'max_mp', 'mp', 'weapons', 'pulp_talents', 'dodge', 'build', 'bonus_dmg']
+                    'indefinity_insanity', 'luck', 'max_mp', 'mp', 'weapons', 'pulp_talents', 'dodge', 'build', 'bonus_dmg', 'ocupation']
         depth = 1
 
 class OcupationSerizalizer(serializers.HyperlinkedModelSerializer):

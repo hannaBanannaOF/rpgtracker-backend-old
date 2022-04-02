@@ -3,5 +3,5 @@ from . import views
 
 app_name = 'api_coc'
 urlpatterns = [
-    path('ficha/<int:pk>', views.FichaDetails.as_view()),
+    path('ficha/details/', views.FichaDetails.as_view()),
 ]
