@@ -8,13 +8,14 @@ from rpg_tracker.core.decorators import can_see_ficha
 from django.contrib.auth.decorators import login_required
 from .serializers import FichaCOCSerializer
 from hbcommons.views import QueryStringRetriveApiView
+from rpg_tracker.core.permissions import ViewFicha
 
 # Create your views here.
 class FichaDetails(QueryStringRetriveApiView):
     queryset = models.FichaCOC
     serializer_class = FichaCOCSerializer
     query_param_fields=["pk"]
-
+    permission_classes = [ViewFicha]
 
 ############################ NO API CALLS ###############################
 

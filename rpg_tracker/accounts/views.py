@@ -13,8 +13,8 @@ from rest_framework.generics import ListAPIView
 
 # Create your views here.
 @api_view(['GET'])
+@login_required
 def current_user(request):
-    
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
