@@ -65,39 +65,39 @@ class MesaBase(AbstractBaseModel, PolymorphicModel):
     open_session = models.BooleanField(verbose_name='Sessão aberta', default=False, null=False, blank=False)
     mestre = models.ForeignKey(to=Usuario, on_delete=models.RESTRICT, verbose_name='Mestre', related_name='mesas_mestradas', blank=True, null=True)
 
-    # def save(self, *args, **kwargs):
-    #     if not self.open_session:
-    #         for x in self.fichas_mesa.all():
-    #             x.in_session = False
-    #             x.save()
-    #         self.mestre.in_session = False
-    #         self.mestre.save()
-    #     layer = get_channel_layer()
-    #     for x in self.fichas_mesa.all():
-    #         g_name = 'sessions_%s' % x.jogador.pk
-    #         static_banner = ''
-    #         alter = ''
-    #         if self.get_content_type() == 'hp':
-    #             static_banner = 'img/banners/hp.png'
-    #             alter = "Harry Potter (Broomstix)"
-    #         elif self.get_content_type() == 'coc':
-    #             static_banner = 'img/banners/cthulhu.jpg'
-    #             alter = "Call of Cthulhu (7e)"
-    #         async_to_sync(layer.group_send)(
-    #             g_name,
-    #             {
-    #                 'type': 'open_close_session',
-    #                 'action': 'OPEN_SESSION' if self.open_session else 'CLOSE_SESSION',
-    #                 'session_id': self.pk,
-    #                 'session_name' : self.name,
-    #                 'header' : {
-    #                     'img' : os.path.join(settings.STATIC_URL, static_banner),
-    #                     'alt' : alter
-    #                 },
-    #                 'link' : "#"
-    #             }
-    #         )
-    #     super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not self.open_session:
+            for x in self.fichas_mesa.all():
+                x.in_session = False
+                x.save()
+            self.mestre.in_session = False
+            self.mestre.save()
+        layer = get_channel_layer()
+        for x in self.fichas_mesa.all():
+            g_name = 'sessions_%s' % x.jogador.pk
+            static_banner = ''
+            alter = ''
+            if self.get_content_type() == 'hp':
+                static_banner = 'img/banners/hp.png'
+                alter = "Harry Potter (Broomstix)"
+            elif self.get_content_type() == 'coc':
+                static_banner = 'img/banners/cthulhu.jpg'
+                alter = "Call of Cthulhu (7e)"
+            async_to_sync(layer.group_send)(
+                g_name,
+                {
+                    'type': 'open_close_session',
+                    'action': 'OPEN_SESSION' if self.open_session else 'CLOSE_SESSION',
+                    'session_id': self.pk,
+                    'session_name' : self.name,
+                    'header' : {
+                        'img' : os.path.join(settings.STATIC_URL, static_banner),
+                        'alt' : alter
+                    },
+                    'link' : "#"
+                }
+            )
+        super().save(*args, **kwargs)
 
     def is_mestre(self, user):
         return self.mestre == user
