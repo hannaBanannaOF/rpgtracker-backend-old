@@ -7,8 +7,7 @@ from django.views.generic import DetailView
 from rpg_tracker.core.forms import UsuarioForm
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rpg_tracker.core.serializers import UserSerializer
-from rpg_tracker.core.serializers import FichaSerializer
+from rpg_tracker.core.serializers import UserSerializer, FichaSerializer, MesaSerializer
 from rest_framework.generics import ListAPIView
 
 # Create your views here.
@@ -23,6 +22,12 @@ class MinhasFichasView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return user.fichas.all()
+
+class MinhasMesasMestradasView(ListAPIView):
+    serializer_class = MesaSerializer
+    def get_queryset(self):
+        user = self.request.user
+        return user.mesas_mestradas.all()
 
 ############################ NO API CALLS ###############################
 @login_required
